@@ -66,8 +66,7 @@ router.post('/', async (req, res, next) => {
     return next(error);  // Forward error to the error-handling middleware
   }
 });
-
-
+//This
 // DELETE /api/session - Log out the user
 router.delete('/', (req, res) => {
   res.clearCookie('token');  // Clear the token cookie
