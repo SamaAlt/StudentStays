@@ -14,38 +14,39 @@ const isProduction = environment === 'production';
 
 const app = express();
 
+// Middleware setup
 app.use(morgan('dev')); // Logging should be first
 app.use(cookieParser()); // Parse cookies before CSRF
 app.use(express.json()); // Parse JSON request bodies
 
-
 // Security Middleware
 if (!isProduction) {
-    // enable cors only in development
-    app.use(cors());
-  }
-  
-  // helmet helps set a variety of headers to better secure your app
-  app.use(
-    helmet.crossOriginResourcePolicy({
-      policy: "cross-origin"
-    })
-  );
-  
+  // enable cors only in development
+  app.use(cors());
+}
+
+// Helmet setup for security
+app.use(
+  helmet.crossOriginResourcePolicy({
+    policy: "cross-origin"
+  })
+);
+
 // Set the _csrf token and create req.csrfToken method
 app.use(
-    csurf({
-      cookie: {
-        secure: isProduction,
-        sameSite: isProduction && "Lax",
-        httpOnly: true
-      }
-    })
-  );
+  csurf({
+    cookie: {
+      secure: isProduction,
+      sameSite: isProduction && "Lax",
+      httpOnly: true
+    }
+  })
+);
 
+// Routes
 app.use(routes);
 
-// Catch unhandled requests and forward to error handler.
+// Catch unhandled requests and forward to error handler
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
   err.title = "Resource Not Found";
@@ -54,8 +55,8 @@ app.use((_req, _res, next) => {
   next(err);
 });
 
+// Error formatter for Sequelize and general errors
 app.use((err, _req, _res, next) => {
-  // check if error is a Sequelize error:
   if (err instanceof ValidationError) {
     let errors = {};
     for (let error of err.errors) {
@@ -67,8 +68,6 @@ app.use((err, _req, _res, next) => {
   next(err);
 });
 
-
-// Error formatter
 app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.error(err);
@@ -79,7 +78,5 @@ app.use((err, _req, res, _next) => {
     stack: isProduction ? null : err.stack
   });
 });
-
-// ...
 
 module.exports = app;
