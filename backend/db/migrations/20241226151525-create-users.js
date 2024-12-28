@@ -1,4 +1,3 @@
-
 'use strict';
 
 let options = {};
@@ -31,11 +30,11 @@ module.exports = {
       },
       firstName: {
         type: Sequelize.STRING,
-        allowNull: false,  // Define firstName in the initial table creation
+        allowNull: false  // Defined here, no need for a separate migration
       },
       lastName: {
         type: Sequelize.STRING,
-        allowNull: false,  // Define lastName in the initial table creation
+        allowNull: false  // Defined here, no need for a separate migration
       },
       createdAt: {
         allowNull: false,
