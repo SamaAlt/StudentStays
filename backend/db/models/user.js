@@ -1,4 +1,4 @@
-// backend/models/user.js
+// backend/db/models/user.js
 'use strict';
 
 const { Model, Validator } = require('sequelize');

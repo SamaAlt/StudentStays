@@ -1,3 +1,4 @@
+//backend/routes/api/users.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
@@ -50,34 +51,38 @@ router.post(
       });
 
       if (existingUser) {
+        const errors = {};
+        if (existingUser.email === email) {
+          errors.email = 'User with this email already exists.';
+        }
+        if (existingUser.username === username) {
+          errors.username = 'User with this username already exists.';
+        }
         const err = new Error('User already exists');
         err.status = 400;
-        err.errors = {
-          email: 'User with this email already exists.',
-          username: 'User with this username already exists.',
-        };
+        err.errors = errors;
         return next(err); // Return error if the user already exists
       }
 
       // Hash the user's password before saving it
-      const hashedPassword = bcrypt.hashSync(password);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create a new user
       const user = await User.create({
         email,
         username,
-        hashedPassword,
-        firstName,  // Add firstName
-        lastName,   // Add lastName
+        password: hashedPassword, // Store the hashed password
+        firstName,
+        lastName,
       });
 
       // Prepare a safe user object (no password)
       const safeUser = {
         id: user.id,
-        firstName: user.firstName,  // Add firstName
-        lastName: user.lastName,    // Add lastName
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
-        username: user.username
+        username: user.username,
       };
 
       // Set the token cookie
