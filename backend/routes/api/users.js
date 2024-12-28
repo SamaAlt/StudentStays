@@ -1,4 +1,3 @@
-// backend/routes/api/users.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
@@ -26,6 +25,12 @@ const validateSignup = [
     .exists({ checkFalsy: true })
     .isLength({ min: 6 })
     .withMessage('Password must be 6 characters or more.'),
+  check('firstName')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a first name.'),
+  check('lastName')
+    .exists({ checkFalsy: true })
+    .withMessage('Please provide a last name.'),
   handleValidationErrors
 ];
 
@@ -34,7 +39,7 @@ router.post(
   '/',
   validateSignup,
   async (req, res, next) => {
-    const { email, username, password } = req.body;
+    const { email, username, password, firstName, lastName } = req.body;
 
     try {
       // Check if email or username already exists
@@ -62,13 +67,17 @@ router.post(
         email,
         username,
         hashedPassword,
+        firstName,  // Add firstName
+        lastName,   // Add lastName
       });
 
       // Prepare a safe user object (no password)
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,  // Add firstName
+        lastName: user.lastName,    // Add lastName
         email: user.email,
-        username: user.username,
+        username: user.username
       };
 
       // Set the token cookie

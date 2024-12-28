@@ -1,3 +1,5 @@
+// backend/routes/api/session.js
+
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
@@ -53,6 +55,8 @@ router.post('/', async (req, res, next) => {
     // Safe user object without the sensitive information (hashedPassword)
     const safeUser = {
       id: user.id,
+      firstName: user.firstName,  // Add firstName
+      lastName: user.lastName,    // Add lastName
       email: user.email,
       username: user.username
     };
@@ -68,7 +72,7 @@ router.post('/', async (req, res, next) => {
     return next(error);  // Forward error to the error-handling middleware
   }
 });
-//This
+
 // DELETE /api/session - Log out the user
 router.delete('/', (req, res) => {
   res.clearCookie('token');  // Clear the token cookie
@@ -85,6 +89,8 @@ router.get(
         id: user.id,
         email: user.email,
         username: user.username,
+        firstName: user.firstName,  // Add firstName
+        lastName: user.lastName     // Add lastName
       };
       return res.json({
         user: safeUser
@@ -103,9 +109,6 @@ const validateLogin = [
     .withMessage('Please provide a password.'),
   handleValidationErrors
 ];
-
-// backend/routes/api/session.js
-// ...
 
 // Log in
 router.post(
@@ -133,8 +136,10 @@ router.post(
 
     const safeUser = {
       id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
-      username: user.username,
+      username: user.username
     };
 
     await setTokenCookie(res, safeUser);
@@ -143,7 +148,6 @@ router.post(
       user: safeUser
     });
   }
-);    
-// ...
+);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+// backend/models/user.js
 'use strict';
 
 const { Model, Validator } = require('sequelize');
@@ -38,6 +39,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           len: [60, 60],
+        },
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1, 50],  // You can adjust the length based on your requirements
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1, 50],  // You can adjust the length based on your requirements
         },
       },
     },
