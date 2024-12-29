@@ -1,46 +1,58 @@
 'use strict';
 
+const { Spot } = require('../models'); // Import the Spot model
+
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA; // Define your schema in options object
+  options.schema = process.env.SCHEMA; // Define schema in production
 }
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('SpotImages', [
-      {
-        spotId: 1, // Corresponds to the spot in demo-spots.js
-        url: 'https://example.com/image1.jpg',
-        preview: true,
-      },
-      {
-        spotId: 1,
-        url: 'https://example.com/image2.jpg',
-        preview: false,
-      },
-      {
-        spotId: 2,
-        url: 'https://example.com/image3.jpg',
-        preview: true,
-      },
-      {
-        spotId: 2,
-        url: 'https://example.com/image4.jpg',
-        preview: false,
-      },
-      {
-        spotId: 3,
-        url: 'https://example.com/image5.jpg',
-        preview: true,
-      },
-    ], options);
+    // Fetch Spot IDs dynamically
+    const spots = await Spot.findAll({
+      attributes: ['id'], // Only fetch the IDs
+      order: [['id', 'ASC']], // Ensure consistent ordering
+    });
+
+    // Map Spot IDs to seed SpotImages dynamically
+    const spotImages = [];
+    spots.forEach((spot, index) => {
+      spotImages.push(
+        {
+          spotId: spot.id,
+          url: `https://example.com/image${index * 2 + 1}.jpg`,
+          preview: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          spotId: spot.id,
+          url: `https://example.com/image${index * 2 + 2}.jpg`,
+          preview: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+      );
+    });
+
+    // Insert the dynamically created SpotImages
+    await queryInterface.bulkInsert('SpotImages', spotImages, options);
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = 'SpotImages';
+    let options = {};
+    if (process.env.NODE_ENV === 'production') {
+      options.schema = process.env.SCHEMA; // Include schema in options
+    }
+
     const Op = Sequelize.Op;
-    await queryInterface.bulkDelete(options, {
-      url: { [Op.like]: 'https://example.com/%' },
-    }, {});
+    await queryInterface.bulkDelete(
+      'SpotImages',
+      {
+        url: { [Op.like]: 'https://example.com/%' }, // Match URLs to delete
+      },
+      options // Pass schema options
+    );
   },
 };
