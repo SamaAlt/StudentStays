@@ -19,6 +19,10 @@ router.get('/api/csrf/restore', (req, res) => {
     'XSRF-Token': csrfToken
   });
 });
+// Catch-all route for debugging
+router.all('*', (req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 // Testing route
 router.get('/hello/world', (req, res) => {

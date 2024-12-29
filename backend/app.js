@@ -1,6 +1,8 @@
-// backend/app.js
+//backend/app.js
+
 const express = require('express');
 require('express-async-errors');
+require('dotenv').config();
 const morgan = require('morgan');
 const cors = require('cors');
 const csurf = require('csurf');
@@ -21,35 +23,35 @@ app.use(express.json()); // Parse JSON request bodies
 
 // Security Middleware
 if (!isProduction) {
-  // enable cors only in development
+  // Enable CORS only in development
   app.use(cors());
 }
 
 // Helmet setup for security
 app.use(
   helmet.crossOriginResourcePolicy({
-    policy: "cross-origin"
+    policy: 'cross-origin',
   })
 );
 
-// Set the _csrf token and create req.csrfToken method
+// CSRF Protection
 app.use(
   csurf({
     cookie: {
-      secure: isProduction,
-      sameSite: isProduction && "Lax",
-      httpOnly: true
-    }
+      secure: isProduction, // Enable secure cookies only in production
+      sameSite: isProduction ? 'Lax' : 'Strict',
+      httpOnly: true,
+    },
   })
 );
 
 // Routes
-app.use(routes);
+app.use(routes); // This will use the routes defined in routes/index.js
 
 // Catch unhandled requests and forward to error handler
 app.use((_req, _res, next) => {
   const err = new Error("The requested resource couldn't be found.");
-  err.title = "Resource Not Found";
+  err.title = 'Resource Not Found';
   err.errors = { message: "The requested resource couldn't be found." };
   err.status = 404;
   next(err);
@@ -68,6 +70,7 @@ app.use((err, _req, _res, next) => {
   next(err);
 });
 
+// Global Error Handler
 app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.error(err);
@@ -75,7 +78,7 @@ app.use((err, _req, res, _next) => {
     title: err.title || 'Server Error',
     message: err.message,
     errors: err.errors,
-    stack: isProduction ? null : err.stack
+    stack: isProduction ? null : err.stack,
   });
 });
 

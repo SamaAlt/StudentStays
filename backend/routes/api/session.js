@@ -1,153 +1,146 @@
-// backend/routes/api/session.js
-
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
-
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
+const { check, validationResult } = require('express-validator');
+const { setTokenCookie, restoreUser } = require('../../utils/auth');
 
 const router = express.Router();
 
-// POST /api/session - Log the user in
-router.post('/', async (req, res, next) => {
-  const { credential, password } = req.body;
-
-  // Ensure both credential and password are provided
-  if (!credential || !password) {
-    const err = new Error("Both credential and password are required.");
-    err.status = 400;
-    return next(err);
-  }
-
-  try {
-    // Find the user by either email or username
-    const user = await User.unscoped().findOne({
-      where: {
-        [Op.or]: {
-          username: credential,
-          email: credential
-        }
-      }
+// GET /api/session - Get the current logged-in user
+router.get('/', restoreUser, (req, res) => {
+  if (req.user) {
+    const { id, firstName, lastName, email, username } = req.user;
+    return res.status(200).json({
+      user: {
+        id,
+        firstName,
+        lastName,
+        email,
+        username,
+      },
     });
-
-    if (!user) {
-      const err = new Error('Login failed');
-      err.status = 401;
-      err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
-      return next(err);
-    }
-
-    // Check if the password matches
-    const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
-
-    if (!isPasswordValid) {
-      const err = new Error('Login failed');
-      err.status = 401;
-      err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
-      return next(err);
-    }
-
-    // Safe user object without the sensitive information (hashedPassword)
-    const safeUser = {
-      id: user.id,
-      firstName: user.firstName,  // Add firstName
-      lastName: user.lastName,    // Add lastName
-      email: user.email,
-      username: user.username
-    };
-
-    // Set the token cookie for the session
-    await setTokenCookie(res, safeUser);
-
-    // Respond with the safe user data
-    return res.json({ user: safeUser });
-
-  } catch (error) {
-    console.error(error);
-    return next(error);  // Forward error to the error-handling middleware
+  } else {
+    return res.status(200).json({ user: null });
   }
 });
 
-// DELETE /api/session - Log out the user
-router.delete('/', (req, res) => {
-  res.clearCookie('token');  // Clear the token cookie
-  return res.json({ message: 'success' });  // Send success message
-});
+// POST /users - User Registration
+router.post(
+  '/users',
+  [
+    check('firstName').exists({ checkFalsy: true }).withMessage('First Name is required'),
+    check('lastName').exists({ checkFalsy: true }).withMessage('Last Name is required'),
+    check('email').isEmail().withMessage('Invalid email').exists({ checkFalsy: true }).withMessage('Email is required'),
+    check('username').exists({ checkFalsy: true }).withMessage('Username is required').isLength({ min: 4 }).withMessage('Username must be at least 4 characters long'),
+    check('password').exists({ checkFalsy: true }).withMessage('Password is required').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  ],
+  async (req, res, next) => {
+    const { firstName, lastName, email, username, password } = req.body;
 
-// Restore session user
-router.get(
+    try {
+      // 1. Check for duplicate user FIRST
+      const existingUser = await User.unscoped().findOne({
+        where: {
+          [Op.or]: [{ email }, { username }],
+        },
+      });
+
+      if (existingUser) {
+        const errors = {};
+        if (existingUser.email === email) {
+          errors.email = 'User already exists with the specified email';
+        }
+        if (existingUser.username === username) {
+          errors.username = 'User with that username already exists';
+        }
+        return res.status(400).json({ message: 'User already exists with the specified email or username', statusCode: 400, errors });
+      }
+
+      // 2. Handle validation errors
+      const validationErrors = validationResult(req);
+      if (!validationErrors.isEmpty()) {
+        const errors = {};
+        validationErrors.array().forEach(error => errors[error.path] = error.msg);
+        return res.status(400).json({ message: 'Validation error', statusCode: 400, errors });
+      }
+
+      // 3. Only create the user if both checks pass
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = await User.create({ firstName, lastName, email, username, hashedPassword });
+      const safeUser = { id: newUser.id, email: newUser.email, username: newUser.username, firstName, lastName };
+      await setTokenCookie(res, safeUser);
+      return res.status(201).json({ user: safeUser });
+
+    } catch (error) {
+      console.error(error);
+      return next(error);
+    }
+  }
+);
+
+// POST /api/session - Log in a user
+router.post(
   '/',
-  (req, res) => {
-    const { user } = req;
-    if (user) {
+  [
+    check('credential').exists({ checkFalsy: true }).withMessage('Email or username is required'),
+    check('password').exists({ checkFalsy: true }).withMessage('Password is required'),
+  ],
+  async (req, res, next) => {
+    const { credential, password } = req.body;
+
+    // Validation errors check
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      const errors = {};
+      validationErrors.array().forEach((error) => {
+        errors[error.param] = error.msg;
+      });
+      return res.status(400).json({
+        message: 'Bad Request',
+        errors,
+      });
+    }
+
+    try {
+      // Find user by email or username
+      const user = await User.findOne({
+        where: {
+          [Op.or]: [{ email: credential }, { username: credential }],
+        },
+      });
+
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      // Check if the password is valid
+      const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      // Safe user object
       const safeUser = {
         id: user.id,
         email: user.email,
         username: user.username,
-        firstName: user.firstName,  // Add firstName
-        lastName: user.lastName     // Add lastName
+        firstName: user.firstName,
+        lastName: user.lastName,
       };
-      return res.json({
-        user: safeUser
+
+      // Set the token cookie
+      await setTokenCookie(res, safeUser);
+
+      return res.status(200).json({
+        user: safeUser,
       });
-    } else return res.json({ user: null });
-  }
-);
-
-const validateLogin = [
-  check('credential')
-    .exists({ checkFalsy: true })
-    .notEmpty()
-    .withMessage('Please provide a valid email or username.'),
-  check('password')
-    .exists({ checkFalsy: true })
-    .withMessage('Please provide a password.'),
-  handleValidationErrors
-];
-
-// Log in
-router.post(
-  '/',
-  validateLogin,
-  async (req, res, next) => {
-    const { credential, password } = req.body;
-
-    const user = await User.unscoped().findOne({
-      where: {
-        [Op.or]: {
-          username: credential,
-          email: credential
-        }
-      }
-    });
-
-    if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-      const err = new Error('Login failed');
-      err.status = 401;
-      err.title = 'Login failed';
-      err.errors = { credential: 'The provided credentials were invalid.' };
-      return next(err);
+    } catch (error) {
+      console.error(error);
+      return next(error);
     }
-
-    const safeUser = {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      username: user.username
-    };
-
-    await setTokenCookie(res, safeUser);
-
-    return res.json({
-      user: safeUser
-    });
   }
 );
+
 
 module.exports = router;

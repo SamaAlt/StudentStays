@@ -1,13 +1,14 @@
 //backend/routes/api/users.js
+
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const { Op } = require('sequelize');
-const { setTokenCookie } = require('../../utils/auth');
+const router = express.Router();
 const { User } = require('../../db/models');
+const bcrypt = require('bcryptjs');
+const { setTokenCookie } = require('../../utils/auth');
+const { Op } = require('sequelize');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const router = express.Router();
 
 // Validate user input
 const validateSignup = [
@@ -32,18 +33,16 @@ const validateSignup = [
   check('lastName')
     .exists({ checkFalsy: true })
     .withMessage('Please provide a last name.'),
-  handleValidationErrors
 ];
 
 // POST /api/users - Sign up a new user
 router.post(
   '/',
-  validateSignup,
+  [...validateSignup, handleValidationErrors], // Ensure `handleValidationErrors` is called after validation checks
   async (req, res, next) => {
     const { email, username, password, firstName, lastName } = req.body;
 
     try {
-      // Check if email or username already exists
       const existingUser = await User.findOne({
         where: {
           [Op.or]: [{ email }, { username }],
@@ -51,32 +50,33 @@ router.post(
       });
 
       if (existingUser) {
+        
         const errors = {};
-        if (existingUser.email === email) {
-          errors.email = 'User with this email already exists.';
+
+        if (existingUser.email && existingUser.email === email) {
+          errors.email = 'User already exists with the specified email';
         }
-        if (existingUser.username === username) {
-          errors.username = 'User with this username already exists.';
+        if (existingUser.username && existingUser.username === username) {
+          errors.username = 'User already exists with the specified email or username';
         }
-        const err = new Error('User already exists');
-        err.status = 400;
-        err.errors = errors;
-        return next(err); // Return error if the user already exists
+
+        return res.status(400).json({
+          message: 'Validation error',
+          statusCode: 400,
+          errors: errors,
+        });
       }
 
-      // Hash the user's password before saving it
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create a new user
       const user = await User.create({
         email,
         username,
-        password: hashedPassword, // Store the hashed password
+        hashedPassword,
         firstName,
         lastName,
       });
 
-      // Prepare a safe user object (no password)
       const safeUser = {
         id: user.id,
         firstName: user.firstName,
@@ -85,16 +85,78 @@ router.post(
         username: user.username,
       };
 
-      // Set the token cookie
       await setTokenCookie(res, safeUser);
 
-      // Return the new user (without sensitive information like hashedPassword)
-      return res.json({
+      return res.status(201).json({
         user: safeUser,
       });
     } catch (err) {
-      console.error(err);
-      next(err); // Forward error to error handler
+      console.error('Error during user sign-up:', err);
+      return next(err);
+    }
+  }
+);
+
+// POST /api/users - Login a user
+router.post(
+  '/login',
+  [
+    check('credential').exists({ checkFalsy: true }).withMessage('Email or username is required'),
+    check('password').exists({ checkFalsy: true }).withMessage('Password is required'),
+  ],
+  async (req, res, next) => {
+    const { credential, password } = req.body;
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      const errors = {};
+      validationErrors.array().forEach(error => errors[error.path] = error.msg);
+      return res.status(400).json({ message: 'Validation error', statusCode: 400, errors });
+    }
+
+    try {
+      // Check if credential is an email or username
+      const user = await User.findOne({
+        where: {
+          [Op.or]: [{ email: credential }, { username: credential }]
+        }
+      });
+
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      // Compare the password with the stored hash
+      const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
+
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      // Generate the JWT token and set the cookie
+      const safeUser = {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      };
+      const token = await setTokenCookie(res, safeUser);
+
+      // Respond with the user info (without password)
+      return res.status(200).json({
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          username: user.username
+        }
+      });
+
+    } catch (error) {
+      console.error(error);
+      return next(error);
     }
   }
 );
