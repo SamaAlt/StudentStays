@@ -1,4 +1,3 @@
-//backend/db/migrations/20241226151525-create-users.js
 
 'use strict';
 

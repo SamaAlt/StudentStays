@@ -1,5 +1,3 @@
-//backend/db/seeders/20241227224731-demo-user.js
-
 'use strict';
 
 const { User } = require('../models');
@@ -12,29 +10,37 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await User.bulkCreate([
-      {
-        email: 'demo@user.io',
-        username: 'Demo-lition',
-        firstName: 'Demo',
-        lastName: 'User',
-        hashedPassword: bcrypt.hashSync('password')
-      },
-      {
-        email: 'user1@user.io',
-        username: 'FakeUser1',
-        firstName: 'Fake',
-        lastName: 'User1',
-        hashedPassword: bcrypt.hashSync('password2')
-      },
-      {
-        email: 'user2@user.io',
-        username: 'FakeUser2',
-        firstName: 'Fake',
-        lastName: 'User2',
-        hashedPassword: bcrypt.hashSync('password3')
-      }
-    ], { validate: true });
+    // Check if the user already exists before inserting
+    const existingUser = await User.findOne({ where: { username: 'Demo-lition' } });
+
+    // Only insert if the user doesn't already exist
+    if (!existingUser) {
+      await User.bulkCreate([
+        {
+          email: 'demo@user.io',
+          username: 'Demo-lition',
+          firstName: 'Demo',
+          lastName: 'User',
+          hashedPassword: bcrypt.hashSync('password')
+        },
+        {
+          email: 'user1@user.io',
+          username: 'FakeUser1',
+          firstName: 'Fake',
+          lastName: 'User1',
+          hashedPassword: bcrypt.hashSync('password2')
+        },
+        {
+          email: 'user2@user.io',
+          username: 'FakeUser2',
+          firstName: 'Fake',
+          lastName: 'User2',
+          hashedPassword: bcrypt.hashSync('password3')
+        }
+      ], { validate: true });
+    } else {
+      console.log('User "Demo-lition" already exists, skipping insertion.');
+    }
   },
 
   async down (queryInterface, Sequelize) {
