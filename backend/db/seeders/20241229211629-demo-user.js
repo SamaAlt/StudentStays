@@ -54,7 +54,7 @@ module.exports = {
         options // Include options (if any)
       );
     } else {
-      console.log('User "Demo-lition" already exists, skipping insertion.');
+      console.log('User already exists, skipping insertion.');
     }
   },
 
