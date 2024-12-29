@@ -1,3 +1,5 @@
+//backend/db/migrations/20241226151525-create-users.js
+
 'use strict';
 
 let options = {};
@@ -50,7 +52,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = "Users";
-    return queryInterface.dropTable(options);
+    await queryInterface.dropTable('Users'); // Correct
   }
 };

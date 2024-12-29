@@ -1,5 +1,6 @@
 // backend/config/database.js
 const config = require('./index');
+require('dotenv').config(); // Ensure dotenv is loaded
 
 module.exports = {
   development: {
