@@ -1,32 +1,76 @@
+// 'use strict';
+
+// const fs = require('fs');
+// const path = require('path');
+// const { Sequelize, DataTypes } = require('sequelize');
+// const config = require(path.resolve(__dirname, '../../config/database.js'))[process.env.NODE_ENV || 'development'];
+// const basename = path.basename(__filename);
+// const db = {};
+
+// // Initialize Sequelize instance
+// const sequelize = new Sequelize(config);
+
+// fs.readdirSync(__dirname)
+//   .filter(file => {
+//     return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
+//   })
+//   .forEach(file => {
+//     const model = require(path.join(__dirname, file))(sequelize, DataTypes);
+//     db[model.name] = model;
+//   });
+
+// // Establish model associations
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
+
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
+
+// module.exports = db;
+
+
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
-const { Sequelize, DataTypes } = require('sequelize');
-const config = require(path.resolve(__dirname, '../../config/database.js'))[process.env.NODE_ENV || 'development'];
+const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(path.join(__dirname, '..', '..', 'config', 'database.js'))[env];
 const db = {};
 
-// Initialize Sequelize instance
-const sequelize = new Sequelize(config);
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
-fs.readdirSync(__dirname)
+// Dynamically import all model files in this directory
+fs
+  .readdirSync(__dirname)
   .filter(file => {
-    return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
+    return (
+      file.indexOf('.') !== 0 && // Exclude hidden files
+      file !== basename && // Exclude this index.js file
+      file.slice(-3) === '.js' // Include only .js files
+    );
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, DataTypes);
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 
-// Establish model associations
+// Associate models if associations exist
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.sequelize = sequelize; // Add Sequelize instance
 
-module.exports = db;
+module.exports = db; // Export the database object
