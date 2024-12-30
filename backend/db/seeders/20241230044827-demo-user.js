@@ -9,26 +9,29 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // If there's a schema, use it; otherwise, just use 'Users' table name
-    const tableName = 'Users'; // No schema in the table name for SQLite
+    options.tableName = 'Users'; // Include tableName in options for compatibility
 
-    // Check if the user already exists using raw SQL
+    // Check if a user with the username 'Demo-lition' already exists
     const userExists = await queryInterface.sequelize.query(
-      `SELECT 1 FROM "${tableName}" WHERE "username" = 'Demo-lition' LIMIT 1`, 
+      `SELECT 1 FROM "${options.schema ? `${options.schema}.` : ''}Users" WHERE "username" = 'Demo-lition' LIMIT 1`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
-    // Only insert if the user doesn't already exist
+    // If the user doesn't exist, insert new users
     if (!userExists.length) {
+      const hashedPasswordDemo = bcrypt.hashSync('password');
+      const hashedPassword1 = bcrypt.hashSync('password2');
+      const hashedPassword2 = bcrypt.hashSync('password3');
+
       await queryInterface.bulkInsert(
-        tableName, // Just the table name without schema
+        options.tableName,
         [
           {
             email: 'demo@user.io',
             username: 'Demo-lition',
             firstName: 'Demo',
             lastName: 'User',
-            hashedPassword: bcrypt.hashSync('password'),
+            hashedPassword: hashedPasswordDemo,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -37,7 +40,7 @@ module.exports = {
             username: 'FakeUser1',
             firstName: 'Fake',
             lastName: 'User1',
-            hashedPassword: bcrypt.hashSync('password2'),
+            hashedPassword: hashedPassword1,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -46,28 +49,28 @@ module.exports = {
             username: 'FakeUser2',
             firstName: 'Fake',
             lastName: 'User2',
-            hashedPassword: bcrypt.hashSync('password3'),
+            hashedPassword: hashedPassword2,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
         ],
-        options // Include options (if any)
+        options
       );
     } else {
-      console.log('User already exists, skipping insertion.');
+      console.log('User "Demo-lition" already exists, skipping insertion.');
     }
   },
 
   async down(queryInterface, Sequelize) {
-    const tableName = 'Users'; // No schema for SQLite
+    options.tableName = 'Users'; // Include tableName in options
 
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(
-      tableName, // No schema reference, just the table name
+      options,
       {
         username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] },
       },
-      options // Pass options (if any) in production
+      {}
     );
-  }
+  },
 };

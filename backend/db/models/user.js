@@ -1,18 +1,32 @@
-
-// backend/db/models/user.js
 'use strict';
 
-const { Model, Validator } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const Validator = require('validator');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      // Define associations
+      User.hasMany(models.Spot, {
+        foreignKey: 'ownerId',
+        as: 'Spots',
+      });
+
+      User.hasMany(models.Review, {
+        foreignKey: 'userId',
+        as: 'Reviews',
+      });
     }
   }
 
   User.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -24,6 +38,14 @@ module.exports = (sequelize, DataTypes) => {
               throw new Error('Cannot be an email.');
             }
           },
+          isNotEmpty(value) {
+            if (Validator.isEmpty(value)) {
+              throw new Error('Username cannot be empty.');
+            }
+          },
+        },
+        set(value) {
+          this.setDataValue('username', value.toLowerCase());
         },
       },
       email: {
@@ -34,26 +56,29 @@ module.exports = (sequelize, DataTypes) => {
           len: [3, 256],
           isEmail: true,
         },
+        set(value) {
+          this.setDataValue('email', value.toLowerCase());
+        },
       },
       hashedPassword: {
         type: DataTypes.STRING.BINARY,
         allowNull: false,
         validate: {
-          len: [60, 60],
+          len: [60, 60], // Adjust if using a hash method with a different fixed length
         },
       },
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 50],  // You can adjust the length based on your requirements
+          len: [1, 50],
         },
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [1, 50],  // You can adjust the length based on your requirements
+          len: [1, 50],
         },
       },
     },
@@ -61,11 +86,11 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
       defaultScope: {
-        attributes: {
-          exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
-        },
+        attributes: { exclude: ['hashedPassword', 'createdAt', 'updatedAt'] },
       },
+      timestamps: true,
     }
   );
+
   return User;
 };

@@ -1,50 +1,52 @@
 'use strict';
 
 let options = {};
+
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA; // Define your schema in options object
+  options.schema = process.env.SCHEMA; // Use schema in production
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Spots', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
       },
       ownerId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
-          model: 'Users',
-          key: 'id',
+          model: 'Users', // references the 'Users' table
+          key: 'id',      // references the 'id' column
         },
+        allowNull: true,
+        onDelete: 'SET NULL', // Ensures the behavior when a referenced user is deleted
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       city: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       state: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       country: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       lat: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
+        type: Sequelize.DECIMAL,
+        allowNull: true,
       },
       lng: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
+        type: Sequelize.DECIMAL,
+        allowNull: true,
       },
       name: {
         type: Sequelize.STRING,
@@ -55,36 +57,35 @@ module.exports = {
         allowNull: false,
       },
       price: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        type: Sequelize.DECIMAL,
+        allowNull: true,
       },
       previewImage: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       numReviews: {
         type: Sequelize.INTEGER,
-        defaultValue: 0,
+        defaultValue: 0, // Default value set to 0
         allowNull: false,
       },
       avgStarRating: {
-        type: Sequelize.FLOAT,
-        defaultValue: 0,
+        type: Sequelize.DECIMAL,
+        defaultValue: 0, // Default value set to 0
         allowNull: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
       },
-    }, options);
+    }, options); // Pass schema options
   },
 
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Spots', options);
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('Spots', options); // Ensure schema is respected when rolling back
   },
 };
