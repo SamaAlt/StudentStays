@@ -1,5 +1,6 @@
 'use strict';
 
+const { User } = require('../models');
 const bcrypt = require('bcryptjs'); // Import bcrypt for password hashing
 
 let options = {};
@@ -17,8 +18,8 @@ module.exports = {
           firstName: 'Demo',
           lastName: 'User',
           username: 'Demo-lition',
-          email: 'demo@user.io',
           hashedPassword: bcrypt.hashSync('password'),
+          email: 'demo@user.io',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
