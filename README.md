@@ -1,4 +1,4 @@
-# StudentStays
+# student_stays
 
 ## Database Schema Design
 

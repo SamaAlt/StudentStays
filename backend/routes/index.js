@@ -8,7 +8,7 @@ router.use('/api', apiRouter);
 
 // Default root route
 router.get('/', (req, res) => {
-  res.send('Welcome to StudentStays Backend!');
+  res.send('Welcome to student_stays Backend!');
 });
 
 // CSRF route for testing

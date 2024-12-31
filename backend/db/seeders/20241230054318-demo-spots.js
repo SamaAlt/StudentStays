@@ -1,6 +1,5 @@
 'use strict';
 
-const { User } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
