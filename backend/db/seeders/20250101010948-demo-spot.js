@@ -1,4 +1,5 @@
 'use strict';
+const { Spot, User } = require('../models'); // Import the Spot model and User for association
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -6,8 +7,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.bulkCreate('Spots', [
+  async up (queryInterface, Sequelize) {
+    await Spot.bulkCreate([
       {
         ownerId: 1,
         address: '123 Main St',

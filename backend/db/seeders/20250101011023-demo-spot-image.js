@@ -1,4 +1,5 @@
 'use strict';
+const { SpotImage, User } = require('../models'); // Import the Spot model and User for association
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -6,8 +7,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.bulkCreate('SpotImages', [
+  async up (queryInterface, Sequelize) {
+    await SpotImage.bulkCreate([
       {
         spotId: 1,
         url: 'https://example.com/images/spot1_1.jpg',

@@ -2,35 +2,39 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SpotImages', {
+    await queryInterface.createTable('Users', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      spotId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,  // Nullable as per the schema
-        references: {
-          model: 'Spots',
-          key: 'id',
-        },
-        onDelete: 'CASCADE',
-      },
-      url: {
+      firstName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      preview: {
-        type: Sequelize.BOOLEAN,
+      lastName: {
+        type: Sequelize.STRING,
         allowNull: false,
-        defaultValue: false,
+      },
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      hashedPassword: {
+        type: Sequelize.STRING.BINARY,
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -46,7 +50,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = 'SpotImages';
+    options.tableName = 'Users';
     return queryInterface.dropTable(options);
   }
 };
