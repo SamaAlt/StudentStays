@@ -1,105 +1,58 @@
 'use strict';
 
-const { Model, DataTypes } = require('sequelize');
+const { Model } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
-      // A spot belongs to a user (owner)
-      Spot.belongsTo(models.User, {
-        foreignKey: 'ownerId',
-        as: 'Owner', // Alias for the association
-      });
-
-      // A spot has many images
-      Spot.hasMany(models.SpotImage, {
-        foreignKey: 'spotId',
-        as: 'Images', // Alias for the association
-      });
-
-      // A spot has many reviews
-      Spot.hasMany(models.Review, {
-        foreignKey: 'spotId',
-        as: 'Reviews',
-      });
+      // Associations
+      Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
+      Spot.hasMany(models.Review, { foreignKey: 'spotId' });
+      Spot.hasMany(models.SpotImage, { foreignKey: 'spotId' });
     }
   }
 
   Spot.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
       ownerId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
-          model: 'Users', // References Users table
-          key: 'id',
+          model: 'Users', // Refers to the 'Users' table
+          key: 'id', // Refers to the 'id' field in the 'Users' table
         },
-        onDelete: 'SET NULL',
       },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      state: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      lat: {
-        type: DataTypes.DECIMAL,
-        allowNull: true,
-      },
-      lng: {
-        type: DataTypes.DECIMAL,
-        allowNull: true,
-      },
+      address: DataTypes.STRING,
+      city: DataTypes.STRING,
+      state: DataTypes.STRING,
+      country: DataTypes.STRING,
+      lat: DataTypes.DECIMAL,
+      lng: DataTypes.DECIMAL,
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      price: {
-        type: DataTypes.DECIMAL,
-        allowNull: true,
-      },
-      previewImage: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      numReviews: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0, // Default value set to 0
         allowNull: false,
       },
-      avgStarRating: {
-        type: DataTypes.DECIMAL,
-        defaultValue: 0, // Default value set to 0
+      price: DataTypes.DECIMAL,
+      createdAt: {
+        type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
       modelName: 'Spot',
-      timestamps: true, // Adds `createdAt` and `updatedAt`
-      tableName: 'Spots', // Explicitly defines the table name
+      timestamps: true, // Enables automatic management of createdAt and updatedAt
     }
   );
-
   return Spot;
 };

@@ -1,31 +1,25 @@
 'use strict';
 
-const { Model, DataTypes } = require('sequelize');
-const Validator = require('validator');
+const { Model, Validator } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // Define associations
-      User.hasMany(models.Spot, {
-        foreignKey: 'ownerId',
-        as: 'Spots',
-      });
-
-      User.hasMany(models.Review, {
-        foreignKey: 'userId',
-        as: 'Reviews',
-      });
+      // Associations
+      User.hasMany(models.Spot, { foreignKey: 'ownerId' });
+      User.hasMany(models.Review, { foreignKey: 'userId' });
     }
   }
 
   User.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
+      firstName: {
+        type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       username: {
         type: DataTypes.STRING,
@@ -38,14 +32,6 @@ module.exports = (sequelize) => {
               throw new Error('Cannot be an email.');
             }
           },
-          isNotEmpty(value) {
-            if (Validator.isEmpty(value)) {
-              throw new Error('Username cannot be empty.');
-            }
-          },
-        },
-        set(value) {
-          this.setDataValue('username', value.toLowerCase());
         },
       },
       email: {
@@ -56,41 +42,35 @@ module.exports = (sequelize) => {
           len: [3, 256],
           isEmail: true,
         },
-        set(value) {
-          this.setDataValue('email', value.toLowerCase());
-        },
       },
       hashedPassword: {
         type: DataTypes.STRING.BINARY,
         allowNull: false,
         validate: {
-          len: [60, 60], // Adjust if using a hash method with a different fixed length
+          len: [60, 60],
         },
       },
-      firstName: {
-        type: DataTypes.STRING,
+      createdAt: {
+        type: DataTypes.DATE,
         allowNull: false,
-        validate: {
-          len: [1, 50],
-        },
+        defaultValue: DataTypes.NOW,
       },
-      lastName: {
-        type: DataTypes.STRING,
+      updatedAt: {
+        type: DataTypes.DATE,
         allowNull: false,
-        validate: {
-          len: [1, 50],
-        },
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
       modelName: 'User',
       defaultScope: {
-        attributes: { exclude: ['hashedPassword', 'createdAt', 'updatedAt'] },
+        attributes: {
+          exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
+        },
       },
-      timestamps: true,
+      timestamps: true, // Enables automatic management of createdAt and updatedAt
     }
   );
-
   return User;
 };

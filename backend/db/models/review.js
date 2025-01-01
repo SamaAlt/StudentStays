@@ -1,67 +1,58 @@
 'use strict';
 
-const { Model, DataTypes } = require('sequelize');
+const { Model } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
+  class Review extends Model {
+    static associate(models) {
+      // Associations
+      Review.belongsTo(models.User, { foreignKey: 'userId' });
+      Review.belongsTo(models.Spot, { foreignKey: 'spotId' });
+    }
+  }
 
-  const Review = sequelize.define('Review', {
-
-    id: {  // Explicitly define the primary key
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-
-    spotId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Spots',  // referenced model
-        key: 'id',       // referenced primary key
+  Review.init(
+    {
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users', // Refers to the 'Users' table
+          key: 'id', // Refers to the 'id' field in the 'Users' table
+        },
       },
-      onDelete: 'CASCADE',  // Optional: Defines behavior when a referenced row in the 'Spots' table is deleted
-    },
-
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Users',  // referenced model
-        key: 'id',       // referenced primary key
+      spotId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Spots', // Refers to the 'Spots' table
+          key: 'id', // Refers to the 'id' field in the 'Spots' table
+        },
       },
-      onDelete: 'CASCADE',  // Optional: Defines behavior when a referenced row in the 'Users' table is deleted
-    },
-
-    stars: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 1,  // Optional: Adds validation to ensure stars are within a valid range
-        max: 5,
+      review: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      stars: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     },
-
-    review: {
-      type: DataTypes.TEXT,
-    },
-
-  });
-
-  // Associations
-  Review.associate = (models) => {
-    // A Review belongs to a Spot
-    Review.belongsTo(models.Spot, {
-      foreignKey: 'spotId',
-      as: 'Spot',  // Custom alias for the relationship
-    });
-
-    // A Review belongs to a User (the reviewer)
-    Review.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'User',  // Custom alias for the relationship
-    });
-  };
-
+    {
+      sequelize,
+      modelName: 'Review',
+      timestamps: true, // Enables automatic management of createdAt and updatedAt
+    }
+  );
   return Review;
 };

@@ -1,70 +1,50 @@
 'use strict';
 
-const { Model, DataTypes } = require('sequelize');
+const { Model } = require('sequelize');
 
-module.exports = (sequelize) => {
-
+module.exports = (sequelize, DataTypes) => {
   class SpotImage extends Model {
-
     static associate(models) {
-      // SpotImage can be associated with either Spot or Review via entityId and entityType
-
-      SpotImage.belongsTo(models.Spot, {
-        foreignKey: 'entityId',
-        constraints: false,
-        as: 'Spot', // Association alias for Spot
-      });
-
-      SpotImage.belongsTo(models.Review, {
-        foreignKey: 'entityId',
-        constraints: false,
-        as: 'Review', // Association alias for Review
-      });
+      // Associations
+      SpotImage.belongsTo(models.Spot, { foreignKey: 'spotId' });
     }
-
   }
 
   SpotImage.init(
     {
-      id: {
+      spotId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-
-      entityId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-
-      entityType: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          isIn: [['Spot', 'Review']], // Ensure only 'Spot' or 'Review' are valid types
+        allowNull: true, // Nullable as per the schema
+        references: {
+          model: 'Spots', // Refers to the 'Spots' table
+          key: 'id', // Refers to the 'id' field in the 'Spots' table
         },
       },
-
       url: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-
       preview: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: false, // Defaults to false if not specified
+        defaultValue: false,
       },
-
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       sequelize,
       modelName: 'SpotImage',
-      timestamps: true, // Enable timestamps (createdAt and updatedAt)
+      timestamps: true, // Enables automatic management of createdAt and updatedAt
     }
   );
-
   return SpotImage;
-
 };

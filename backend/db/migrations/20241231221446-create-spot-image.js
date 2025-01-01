@@ -1,5 +1,10 @@
 'use strict';
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;
+}
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('SpotImages', {
@@ -9,16 +14,14 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      entityId: {
+      spotId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      entityType: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          isIn: [['Spot', 'Review']], // Ensure only 'Spot' or 'Review' are valid types
+        allowNull: true,  // Nullable as per the schema
+        references: {
+          model: 'Spots',
+          key: 'id',
         },
+        onDelete: 'CASCADE',
       },
       url: {
         type: Sequelize.STRING,
@@ -27,20 +30,23 @@ module.exports = {
       preview: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false, // Defaults to false if not specified
+        defaultValue: false,
       },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         type: Sequelize.DATE,
         allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
-    });
+    }, options);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SpotImages');
-  },
+    options.tableName = 'SpotImages';
+    return queryInterface.dropTable(options);
+  }
 };
