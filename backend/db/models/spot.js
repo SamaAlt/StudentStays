@@ -1,3 +1,5 @@
+//backend/db/models/spot.js
+
 'use strict';
 
 const { Model } = require('sequelize');
@@ -46,6 +48,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
+      },
+      avgRating: { // Define avgRating attribute
+        type: DataTypes.FLOAT,
+        defaultValue: 0, // Set a default value
+      },
+      previewImage: { // Define previewImage attribute
+        type: DataTypes.STRING,
+        allowNull: true, // Allow null if no image is provided
       },
     },
     {

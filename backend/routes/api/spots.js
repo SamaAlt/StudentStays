@@ -44,18 +44,19 @@ router.get('/', async (req, res) => {
         price: spot.price,
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
-        avgRating: spot.avgRating, // You may need to calculate avgRating if not present in the model
+        avgRating: spot.avgRating, 
         previewImage: spot.previewImage
       }))
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in GET /api/spots:", error); // Log the full error
     return res.status(500).json({
       message: 'Failed to retrieve spots',
       error: error.message,
     });
   }
 });
+
 
 // GET /api/spots/current - Get all spots owned by the current user
 router.get('/current', requireAuth, async (req, res) => {
@@ -165,51 +166,20 @@ router.get('/:id', async (req, res, next) => {
   
 // POST /api/spots - Create a new spot
 router.post('/', requireAuth, async (req, res) => {
-    const { address, city, state, country, lat, lng, name, description, price, previewImage } = req.body;
-  
-    try {
-      const spot = await Spot.create({
-        ownerId: req.user.id, // Associate the spot with the current user
-        address,
-        city,
-        state,
-        country,
-        lat,
-        lng,
-        name,
-        description,
-        price,
-        previewImage
-      });
-  
-      return res.status(201).json({
-        spot: {
-          id: spot.id,
-          ownerId: spot.ownerId,
-          address: spot.address,
-          city: spot.city,
-          state: spot.state,
-          country: spot.country,
-          lat: spot.lat,
-          lng: spot.lng,
-          name: spot.name,
-          description: spot.description,
-          price: spot.price,
-          previewImage: spot.previewImage
-        }
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Failed to create spot', error: error.message });
-    }
-  });
-
-// POST /spots - Create a new Spot
-router.post('/', async (req, res) => {
-  const { address, city, state, country, lat, lng, name, description, price } = req.body;
+  const { address, city, state, country, lat, lng, name, description, price, previewImage, avgRating } = req.body;
 
   // Validate required fields
-  const errors = validateSpotCreation(req.body); // Custom validation utility
+  const errors = [];
+  if (!address) errors.push({ field: "address", message: "Address is required" });
+  if (!city) errors.push({ field: "city", message: "City is required" });
+  if (!state) errors.push({ field: "state", message: "State is required" });
+  if (!country) errors.push({ field: "country", message: "Country is required" });
+  if (!lat) errors.push({ field: "lat", message: "Latitude is required" });
+  if (!lng) errors.push({ field: "lng", message: "Longitude is required" });
+  if (!name) errors.push({ field: "name", message: "Name is required" });
+  if (!description) errors.push({ field: "description", message: "Description is required" });
+  if (!price) errors.push({ field: "price", message: "Price is required" });
+
   if (errors.length) {
     return res.status(400).json({
       message: "Bad Request",
@@ -221,9 +191,9 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Create a new spot
-    const newSpot = await Spot.create({
-      ownerId: req.user.id,  // Assume that the user ID is available from authentication middleware
+    // Create a new spot with avgRating and previewImage (if provided)
+    const spot = await Spot.create({
+      ownerId: req.user.id,  // Associate the spot with the current user
       address,
       city,
       state,
@@ -232,18 +202,34 @@ router.post('/', async (req, res) => {
       lng,
       name,
       description,
-      price
+      price,
+      avgRating: avgRating || 0, // Default to 0 if avgRating is not provided
+      previewImage: previewImage || null, // Default to null if previewImage is not provided
     });
 
-    return res.status(201).json(newSpot);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      message: "Internal Server Error",
-      error: err.message,
+    return res.status(201).json({
+      spot: {
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        description: spot.description,
+        price: spot.price,
+        avgRating: spot.avgRating,
+        previewImage: spot.previewImage
+      }
     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Failed to create spot', error: error.message });
   }
 });
+
  
 // POST /spots/:spotId/images - Add an image to a spot
 router.post('/:spotId/images', requireAuth, async (req, res) => {

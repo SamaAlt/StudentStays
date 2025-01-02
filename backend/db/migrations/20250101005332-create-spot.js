@@ -48,6 +48,15 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
+      avgRating: { // Add avgRating column
+        type: Sequelize.FLOAT,
+        allowNull: true, // or set a default value (e.g. 0)
+        defaultValue: 0, // default value if required
+      },
+      previewImage: { // Add previewImage column
+        type: Sequelize.STRING,
+        allowNull: true, // or set a default value if required
+      },
     }, options);
   },
 

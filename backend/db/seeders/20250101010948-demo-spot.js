@@ -20,6 +20,8 @@ module.exports = {
         name: 'Sunny Apartment',
         description: 'A beautiful sunny apartment in the heart of New York.',
         price: 250.00,
+        avgRating: 4.0, // Add avgRating value
+        previewImage: 'image2.jpg', // Add previewImage value
         createdAt: new Date(),
         updatedAt: new Date(),
       },
