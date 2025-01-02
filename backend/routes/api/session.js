@@ -1,13 +1,14 @@
+//backend/routes/api/session.js
 const express = require('express');
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const { User } = require('../../db/models');
 const { check, validationResult } = require('express-validator');
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser, requireAuth  } = require('../../utils/auth');
 
 const router = express.Router();
 
-// GET /api/session - Get the current logged-in user
+// GET /api/session 
 router.get('/', restoreUser, (req, res) => {
   if (req.user) {
     const { id, firstName, lastName, email, username } = req.user;
@@ -103,20 +104,23 @@ router.post(
     }
 
     try {
-      // Find user by email or username
-      const user = await User.findOne({
+      // Find user by email or username, including hashedPassword
+      const user = await User.unscoped().findOne({
         where: {
           [Op.or]: [{ email: credential }, { username: credential }],
         },
       });
 
-      if (!user) {
+      // Ensure user and hashedPassword exist
+      if (!user || !user.hashedPassword) {
+        console.log("User not found or hashedPassword missing:", credential);
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      // Check if the password is valid
+      // Compare the password with the hashed password
       const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
       if (!isPasswordValid) {
+        console.log("Password mismatch for user:", user.username);
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
@@ -136,11 +140,13 @@ router.post(
         user: safeUser,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Error during login process:", error);
       return next(error);
     }
   }
 );
+
+
 
 
 module.exports = router;

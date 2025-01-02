@@ -1,3 +1,5 @@
+//db/migrations/xxx-create-user.js
+
 'use strict';
 
 let options = {};
@@ -33,7 +35,7 @@ module.exports = {
         unique: true,
       },
       hashedPassword: {
-        type: Sequelize.STRING.BINARY,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       createdAt: {

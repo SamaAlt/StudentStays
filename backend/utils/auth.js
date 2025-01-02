@@ -1,6 +1,9 @@
+// backend/utils/auth.js
+
 const jwt = require('jsonwebtoken');
 const { jwtConfig } = require('../config');
 const { User } = require('../db/models');
+const csrf = require('csurf');
 
 const { secret, expiresIn } = jwtConfig; 
 
@@ -33,39 +36,52 @@ const setTokenCookie = (res, user) => {
   return token;
 };
 
+
 // Restore user from JWT token
 const restoreUser = async (req, res, next) => {
   try {
-    // Look for JWT token in headers (Authorization header) or cookies
     const token = req.headers.authorization?.split(' ')[1] || req.cookies.token;
 
     if (!token) {
       console.log('No token found in request.');
-      return next();  // Proceed if no token is provided
+      return next(); // Proceed if no token is provided
     }
 
-    // Decode the JWT token and extract user info
-    const jwtPayload = jwt.verify(token, process.env.JWT_SECRET || secret); // Use the same secret used to sign the token
-    console.log('JWT Payload:', jwtPayload);
+    try {
+      const jwtPayload = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Retrieve the user based on the user ID in the token
-    const user = await User.findByPk(jwtPayload.data.id, {
-      attributes: ['id', 'email', 'username', 'firstName', 'lastName'],
-    });
+      if (!jwtPayload || !jwtPayload.data || !jwtPayload.data.id) {
+        console.log('Invalid JWT payload structure.');
+        return next();
+      }
 
-    if (user) {
-      req.user = user;  // Attach the user to the request object
-      console.log('User restored:', req.user);
-    } else {
-      console.log('No user found for provided token.');
+      const user = await User.findByPk(jwtPayload.data.id, {
+        attributes: ['id', 'email', 'username', 'firstName', 'lastName'],
+      });
+
+      if (user) {
+        req.user = user;
+        console.log('User restored:', user.toJSON());
+      } else {
+        console.log('No user found for provided token.');
+      }
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        console.log('Token has expired.');
+      } else if (err.name === 'JsonWebTokenError') {
+        console.log('Invalid token:', err.message);
+      } else {
+        console.error('Token verification error:', err);
+      }
     }
-
   } catch (error) {
     console.error('Error restoring user from token:', error);
   }
 
-  return next();  // Continue processing the request
+  return next(); // Continue processing the request
 };
+
+
 
 // Middleware to require authentication for certain routes
 const requireAuth = function (req, _res, next) {

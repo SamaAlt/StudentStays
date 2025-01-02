@@ -1,3 +1,5 @@
+//backend/db/models/user.js
+
 'use strict';
 
 const { Model, Validator } = require('sequelize');
@@ -44,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       hashedPassword: {
-        type: DataTypes.STRING.BINARY,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: [60, 60],
@@ -66,10 +68,10 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'User',
       defaultScope: {
         attributes: {
-          exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
+          exclude: ['hashedPassword', 'createdAt', 'updatedAt'],
         },
       },
-      timestamps: true, // Enables automatic management of createdAt and updatedAt
+      timestamps: true, 
     }
   );
   return User;
