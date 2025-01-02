@@ -110,6 +110,38 @@ router.get('/current', requireAuth, async (req, res) => {
   }
 });
 
+// GET /spots - Get all spots with query filters
+router.get('/spots', async (req, res) => {
+  const { city, state, country, minPrice, maxPrice, name, page = 1, limit = 20 } = req.query;
+  
+  try {
+    // Construct filter conditions
+    let filters = {};
+
+    if (city) filters.city = city;
+    if (state) filters.state = state;
+    if (country) filters.country = country;
+    if (name) filters.name = { [Op.iLike]: `%${name}%` }; // Case-insensitive match for name
+    if (minPrice) filters.price = { [Op.gte]: minPrice };
+    if (maxPrice) filters.price = { [Op.lte]: maxPrice };
+    
+    // Paginate results
+    const spots = await Spot.findAll({
+      where: filters,
+      limit: parseInt(limit),
+      offset: (page - 1) * limit,
+    });
+
+    return res.status(200).json({ spots });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+});
+
 // GET /api/spots/:id - Get details of a spot by ID
 router.get('/:id', async (req, res, next) => {
     const { id } = req.params; // Get the spot ID from the URL
@@ -233,8 +265,18 @@ router.post('/', requireAuth, async (req, res) => {
  
 // POST /spots/:spotId/images - Add an image to a spot
 router.post('/:spotId/images', requireAuth, async (req, res) => {
-  const { spotId } = req.params;
-  const { url, preview } = req.body;
+  const { spotId } = req.params; // Get the spotId from the URL
+  const { url, preview } = req.body; // Get image data from request body
+
+  // Debugging log to check spotId
+  console.log("Received spotId:", spotId);
+
+  // Check if spotId is provided and is a valid integer
+  if (!spotId || isNaN(spotId)) {
+    return res.status(400).json({
+      message: "Invalid Spot ID provided"
+    });
+  }
 
   // Check if the spot exists
   const spot = await Spot.findByPk(spotId);
@@ -247,14 +289,20 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
     return res.status(403).json({ message: "You are not authorized to add an image to this spot" });
   }
 
+  // Check if URL and preview are provided and valid
+  if (!url || !preview) {
+    return res.status(400).json({ message: "URL and preview image are required" });
+  }
+
   try {
-    // Create the new image for the spot
+    // Create a new image for the spot with the provided data
     const newImage = await SpotImage.create({
       spotId,
-      url,
-      preview,
+      url,       // Image URL
+      preview,   // Image preview flag
     });
 
+    // Return the new image's details
     return res.status(201).json({
       id: newImage.id,
       url: newImage.url,
@@ -269,7 +317,7 @@ router.post('/:spotId/images', requireAuth, async (req, res) => {
   }
 });
 
- 
+
 // PUT /spots/:spotId - Edit an existing spot
 router.put('/:spotId', requireAuth, async (req, res) => {
   const { spotId } = req.params;
@@ -358,36 +406,13 @@ router.delete('/:spotId', requireAuth, async (req, res) => {
   }
 });
 
-// GET /spots - Get all spots with query filters
-router.get('/spots', async (req, res) => {
-  const { city, state, country, minPrice, maxPrice, name, page = 1, limit = 20 } = req.query;
-  
-  try {
-    // Construct filter conditions
-    let filters = {};
 
-    if (city) filters.city = city;
-    if (state) filters.state = state;
-    if (country) filters.country = country;
-    if (name) filters.name = { [Op.iLike]: `%${name}%` }; // Case-insensitive match for name
-    if (minPrice) filters.price = { [Op.gte]: minPrice };
-    if (maxPrice) filters.price = { [Op.lte]: maxPrice };
-    
-    // Paginate results
-    const spots = await Spot.findAll({
-      where: filters,
-      limit: parseInt(limit),
-      offset: (page - 1) * limit,
-    });
-
-    return res.status(200).json({ spots });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
+router.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: "Internal Server Error",
+    error: err.message,
+  });
 });
 
 

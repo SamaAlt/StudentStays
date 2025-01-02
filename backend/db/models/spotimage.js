@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       spotId: {
         type: DataTypes.INTEGER,
-        allowNull: true, // Nullable as per the schema
+        allowNull: false, // Nullable as per the schema
         references: {
           model: 'Spots', // Refers to the 'Spots' table
           key: 'id', // Refers to the 'id' field in the 'Spots' table

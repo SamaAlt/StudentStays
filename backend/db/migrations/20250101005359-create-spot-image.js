@@ -15,7 +15,7 @@ module.exports = {
       },
       spotId: {
         type: Sequelize.INTEGER,
-        allowNull: true,  // Nullable as per the schema
+        allowNull: false,  // Nullable as per the schema
         references: {
           model: 'Spots',
           key: 'id',
