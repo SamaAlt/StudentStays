@@ -1,7 +1,9 @@
 // backend/routes/api/spotImages.js
 const express = require('express');
-const { Spot, SpotImage } =  require('../../db/models');
+const { Spot, SpotImage } = require('../../db/models');
+const { requireAuth } = require('../../utils/auth'); // Assuming this middleware exists
 const router = express.Router();
+
 
 // DELETE /spots/:spotId/images/:imageId - Delete an image from a spot
 router.delete('/spots/:spotId/images/:imageId', async (req, res) => {

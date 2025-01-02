@@ -1,3 +1,4 @@
+//backend/db/models/spotimage.js
 'use strict';
 
 const { Model } = require('sequelize');
