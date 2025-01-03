@@ -23,12 +23,16 @@ module.exports = {
     await SpotImage.bulkCreate([
       {spotId: 1,
         url:'https://unsplash.com/photos/3d-render-modern-building-exterior-2MA8dFvOMec',
-        preview:true
+        preview:true,
+        createdAt: new Date(),
+        updatedAt: new Date()
 
       },
       {spotId: 2,
         url:'https://images.app.goo.gl/J2T3764iNL8akcMW7',
-        preview:true
+        preview:true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ],{ validate: true })
   },
