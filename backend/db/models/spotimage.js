@@ -19,26 +19,38 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   SpotImage.init({
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     spotId:{
       type: DataTypes.INTEGER,
       allowNull: false
     },
     url: {
-      type:DataTypes.TEXT,
+      type:DataTypes.STRING,
       allowNull:false,
-      validate:{
-        isUrl: true 
-      }
     },
     preview: {
       type: DataTypes.BOOLEAN,
       allowNull:false
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+      onUpdate: DataTypes.NOW,
     }
   }, {
     sequelize,
     modelName: 'SpotImage',
-    timestamps: true, 
-    updatedAt: false,
+    timestamps: true,
   });
   return SpotImage;
 };
