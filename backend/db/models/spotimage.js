@@ -4,19 +4,41 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class SpotImage extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
+      // define association here
       SpotImage.belongsTo(models.Spot, {
-        foreignKey: 'spotId'
+        foreignKey: 'spotId',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       })
     }
   }
   SpotImage.init({
-    spotId: DataTypes.INTEGER,
-    url: DataTypes.STRING,
-    preview: DataTypes.BOOLEAN
+    spotId:{
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    url: {
+      type:DataTypes.TEXT,
+      allowNull:false,
+      validate:{
+        isUrl: true 
+      }
+    },
+    preview: {
+      type: DataTypes.BOOLEAN,
+      allowNull:false
+    }
   }, {
     sequelize,
     modelName: 'SpotImage',
+    timestamps: true, 
+    updatedAt: false,
   });
   return SpotImage;
 };
