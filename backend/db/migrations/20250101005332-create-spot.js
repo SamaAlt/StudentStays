@@ -24,7 +24,7 @@ module.exports = {
         onUpdate: 'CASCADE'
       },
       address: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(1000),
         allowNull: false,
         unique:true
       },
