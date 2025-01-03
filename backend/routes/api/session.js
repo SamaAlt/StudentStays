@@ -1,151 +1,109 @@
-//backend/routes/api/session.js
-const express = require('express');
+const express = require('express')
 const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
+const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { check, validationResult } = require('express-validator');
-const { setTokenCookie, restoreUser, requireAuth  } = require('../../utils/auth');
-
 const router = express.Router();
 
-// GET /api/session 
-router.get('/', restoreUser, (req, res) => {
-  if (req.user) {
-    const { id, firstName, lastName, email, username } = req.user;
-    return res.status(200).json({
-      user: {
-        id,
-        firstName,
-        lastName,
-        email,
-        username,
-      },
+
+// Middleware to validate login parameters
+const validateLogin = [
+  check('credential')
+    .exists({ checkFalsy: true })
+    .withMessage('Email or username is required.')
+    .notEmpty()
+    .withMessage('Please provide a valid email or username.'),
+  check('password')
+    .exists({ checkFalsy: true })
+    .withMessage('Password is required.')
+    .notEmpty()
+    .withMessage('Please provide a password.'),
+
+(req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      message: 'Bad Request',
+      errors: errors.mapped(),
     });
-  } else {
-    return res.status(200).json({ user: null });
   }
-});
+  next();
+}
+];
 
-// POST /users - User Registration
-router.post(
-  '/users',
-  [
-    check('firstName').exists({ checkFalsy: true }).withMessage('First Name is required'),
-    check('lastName').exists({ checkFalsy: true }).withMessage('Last Name is required'),
-    check('email').isEmail().withMessage('Invalid email').exists({ checkFalsy: true }).withMessage('Email is required'),
-    check('username').exists({ checkFalsy: true }).withMessage('Username is required').isLength({ min: 4 }).withMessage('Username must be at least 4 characters long'),
-    check('password').exists({ checkFalsy: true }).withMessage('Password is required').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
-  ],
-  async (req, res, next) => {
-    const { firstName, lastName, email, username, password } = req.body;
-
-    try {
-      // 1. Check for duplicate user FIRST
-      const existingUser = await User.unscoped().findOne({
-        where: {
-          [Op.or]: [{ email }, { username }],
-        },
-      });
-
-      if (existingUser) {
-        const errors = {};
-        if (existingUser.email === email) {
-          errors.email = 'User already exists with the specified email';
-        }
-        if (existingUser.username === username) {
-          errors.username = 'User with that username already exists';
-        }
-        return res.status(400).json({ message: 'User already exists with the specified email or username', statusCode: 400, errors });
-      }
-
-      // 2. Handle validation errors
-      const validationErrors = validationResult(req);
-      if (!validationErrors.isEmpty()) {
-        const errors = {};
-        validationErrors.array().forEach(error => errors[error.path] = error.msg);
-        return res.status(400).json({ message: 'Validation error', statusCode: 400, errors });
-      }
-
-      // 3. Only create the user if both checks pass
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = await User.create({ firstName, lastName, email, username, hashedPassword });
-      const safeUser = { id: newUser.id, email: newUser.email, username: newUser.username, firstName, lastName };
-      await setTokenCookie(res, safeUser);
-      return res.status(201).json({ user: safeUser });
-
-    } catch (error) {
-      console.error(error);
-      return next(error);
-    }
-  }
-);
-
-// POST /api/session - Log in a user
+// Log in
 router.post(
   '/',
-  [
-    check('credential').exists({ checkFalsy: true }).withMessage('Email or username is required'),
-    check('password').exists({ checkFalsy: true }).withMessage('Password is required'),
-  ],
+  validateLogin,
   async (req, res, next) => {
     const { credential, password } = req.body;
 
-    // Validation errors check
-    const validationErrors = validationResult(req);
-    if (!validationErrors.isEmpty()) {
-      const errors = {};
-      validationErrors.array().forEach((error) => {
-        errors[error.param] = error.msg;
-      });
-      return res.status(400).json({
-        message: 'Bad Request',
-        errors,
-      });
-    }
-
     try {
-      // Find user by email or username, including hashedPassword
       const user = await User.unscoped().findOne({
         where: {
-          [Op.or]: [{ email: credential }, { username: credential }],
-        },
+          [Op.or]: {
+            username: credential,
+            email: credential
+          }
+        }
       });
 
-      // Ensure user and hashedPassword exist
-      if (!user || !user.hashedPassword) {
-        console.log("User not found or hashedPassword missing:", credential);
+      if (!user || !(await bcrypt.compare(password, user.hashedPassword.toString()))) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      // Compare the password with the hashed password
-      const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
-      if (!isPasswordValid) {
-        console.log("Password mismatch for user:", user.username);
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      // Safe user object
       const safeUser = {
         id: user.id,
-        email: user.email,
-        username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
+        email: user.email,
+        username: user.username,
       };
 
-      // Set the token cookie
       await setTokenCookie(res, safeUser);
 
-      return res.status(200).json({
-        user: safeUser,
+      return res.json({
+        user: safeUser
       });
-    } catch (error) {
-      console.error("Error during login process:", error);
-      return next(error);
+
+    } catch (err) {
+      next(err);
     }
   }
 );
 
+
+
+// Log out
+router.delete(
+    '/',
+    (_req, res) => {
+      res.clearCookie('token');
+      return res.json({ message: 'success' });
+    }
+  );
+
+
+// Restore session user
+router.get(
+    '/',
+    (req, res) => {
+      const { user } = req;
+      if (user) {
+        const safeUser = {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          username: user.username,
+        };
+        return res.json({
+          user: safeUser
+        });
+      } else return res.json({ user: null });
+    }
+  );
 
 
 

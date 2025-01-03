@@ -2,66 +2,78 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Spots', {
       id: {
-        type: Sequelize.INTEGER,
         allowNull: false,
-        primaryKey: true,
         autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
       },
       ownerId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'Users',
-          key: 'id',
+          key: 'id'
         },
-        onDelete: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      address: Sequelize.STRING,
-      city: Sequelize.STRING,
-      state: Sequelize.STRING,
-      country: Sequelize.STRING,
-      lat: Sequelize.DECIMAL,
-      lng: Sequelize.DECIMAL,
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      city: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      state: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      country: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      lat: {
+        type: Sequelize.DECIMAL,
+        allowNull: false
+      },
+      lng: {
+        type: Sequelize.DECIMAL,
+        allowNull: false
+      },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       description: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
-      price: Sequelize.DECIMAL,
+      price: {
+        type: Sequelize.DECIMAL,
+        allowNull: false
+      },
       createdAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
-      avgRating: { // Add avgRating column
-        type: Sequelize.FLOAT,
-        allowNull: true, // or set a default value (e.g. 0)
-        defaultValue: 0, // default value if required
-      },
-      previewImage: { // Add previewImage column
-        type: Sequelize.STRING,
-        allowNull: true, // or set a default value if required
-      },
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      }
     }, options);
   },
-
   async down(queryInterface, Sequelize) {
-    options.tableName = 'Spots';
+    options.tableName = "Spots";
     return queryInterface.dropTable(options);
   }
 };

@@ -1,66 +1,100 @@
+
 'use strict';
-const { Spot, User } = require('../models'); // Import the Spot model and User for association
+
+// /** @type {import('sequelize-cli').Migration} */ //what is this?
+
+const { Spot } = require('../models');
+const bcrypt = require("bcryptjs");
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
 module.exports = {
   async up (queryInterface, Sequelize) {
+    /**
+     * Add seed commands here.
+     *
+     * Example:
+     * await queryInterface.bulkInsert('People', [{
+     *   name: 'John Doe',
+     *   isBetaMember: false
+     * }], {});
+    */
+
     await Spot.bulkCreate([
       {
         ownerId: 1,
         address: '123 Main St',
-        city: 'New York',
-        state: 'NY',
-        country: 'USA',
-        lat: 40.7128,
-        lng: -74.0060,
-        name: 'Sunny Apartment',
-        description: 'A beautiful sunny apartment in the heart of New York.',
-        price: 250.00,
-        avgRating: 4.0, // Add avgRating value
-        previewImage: 'image2.jpg', // Add previewImage value
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ownerId: 2,
-        address: '456 Oak Rd',
-        city: 'Los Angeles',
+        city: 'Anytown',
         state: 'CA',
         country: 'USA',
         lat: 34.0522,
         lng: -118.2437,
-        name: 'Ocean View Condo',
-        description: 'A luxurious condo with an ocean view.',
-        price: 350.00,
+        name: 'Cozy Cottage',
+        description: 'Nestled in the rolling hills of Hobbiton, this charming and cozy hobbit hole offers a peaceful retreat for those seeking a tranquil countryside escape.',
+        price: 150.00,
         createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        ownerId: 1,
+        address: '6301 Trife St',
+        city: 'Hometown',
+        state: 'HT',
+        country: 'Spain',
+        lat: 37.7749,
+        lng: -122.4194,
+        name: 'Urban Homestead',
+        description: "A palace of trife arts, where dreams come true. This sleek, open-concept artist's loft is the perfect blend of creativity and luxury. ",
+        price: 100.00,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        ownerId: 2,
+        address: '456 Elm St',
+        city: 'Othertown',
+        state: 'NY',
+        country: 'USA',
+        lat: 40.7128,
+        lng: -74.0060,
+        name: 'Modern Apartment',
+        description: 'Experience the charm of New York City from this classic brownstone apartment located in the historic Upper West Side.',
+        price: 200.00,
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         ownerId: 3,
-        address: '789 Pine Blvd',
-        city: 'San Francisco',
-        state: 'CA',
+        address: '999 Ocean Ave',
+        city: 'Beachtown',
+        state: 'FL',
         country: 'USA',
-        lat: 37.7749,
-        lng: -122.4194,
-        name: 'Mountain Retreat',
-        description: 'A peaceful mountain retreat with stunning views.',
-        price: 400.00,
+        lat: 46.8596,
+        lng: -94.1470,
+        name: 'Beachfront Paradise',
+        description: 'Wake up to the sound of waves and enjoy stunning ocean views from this modern Miami Beach house.',
+        price: 500.00,
         createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-    ], options);
+        updatedAt: new Date()
+      },
+
+    ], { validate: true });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
+    /**
+     * Add commands to revert seed here.
+     *
+     * Example:
+     * await queryInterface.bulkDelete('People', null, {});
+     */
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['Sunny Apartment', 'Ocean View Condo', 'Mountain Retreat'] }
-    }, {});
+      address: { [Op.in]: ['123 Main St', '6301 Trife St', '456 Elm St'] }
+    }, {})
   }
 };

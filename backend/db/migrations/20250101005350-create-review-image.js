@@ -9,27 +9,24 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SpotImages', {
+    await queryInterface.createTable('ReviewImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      spotId: {
+      reviewId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Spots',
+          model: 'Reviews',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
       url: {
         type: Sequelize.STRING
-      },
-      preview: {
-        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -42,7 +39,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "SpotImages"
+    options.tableName = "ReviewImages";
     return queryInterface.dropTable(options);
   }
 };

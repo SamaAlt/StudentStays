@@ -3,7 +3,7 @@
 
 // /** @type {import('sequelize-cli').Migration} */ //what is this?
 
-const { Review } = require('../models');
+const { ReviewImage } = require('../models');
 const bcrypt = require("bcryptjs");
 
 let options = {};
@@ -23,55 +23,45 @@ module.exports = {
      * }], {});
     */
 
-    await Review.bulkCreate([
+    await ReviewImage.bulkCreate([
       {
-        userId: 1,
-        spotId: 1,
-        review: "We stays here, precious, but we don’t likes it! Too much sunlight, yes, yes, hurts our eyes!",
-        stars: 2,
+        reviewId: 1,
+        url: 'https://example.com/review_image1.jpg',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        userId: 2,
-        spotId: 1,
-        review: "This humble abode is perfect for wizards needing a break from meddling in the affairs of others.",
-        stars: 5,
+        reviewId: 1,
+        url: 'https://example.com/review_image2.jpg',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        userId: 3,
-        spotId: 1,
-        review: "As a native of Hobbiton, I must say this hobbit hole has a lot going for it—cozy atmosphere.",
-        stars: 4,
+        reviewId: 2,
+        url: 'https://example.com/review_image3.jpg',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        userId: 2,
-        spotId: 2,
-        review: 'Great location, very modern.',
-        stars: 4,
+        reviewId: 2,
+        url: 'https://example.com/review_image4.jpg',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        userId: 3,
-        spotId: 2,
-        review: 'Great place, very cozy!',
-        stars: 5,
+        reviewId: 3,
+        url: 'https://example.com/review_image5.jpg',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        userId: 1,
-        spotId: 3,
-        review: 'Nice and modern apartment.',
-        stars: 4,
+        reviewId: 4,
+        url: 'https://example.com/review_image6.jpg',
         createdAt: new Date(),
         updatedAt: new Date()
-      }
+      },
+
+
     ], { validate: true });
   },
 
@@ -82,10 +72,10 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Reviews';
+    options.tableName = 'ReviewImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      userId: { [Op.in]: [1, 2] }
+      url: { [Op.in]: ['https://example.com/review_image1.jpg','https://example.com/review_image2.jpg','https://example.com/review_image3.jpg','https://example.com/review_image4.jpg','https://example.com/review_image5.jpg','https://example.com/review_image6.jpg',] }
     }, {})
   }
 };

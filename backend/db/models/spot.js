@@ -1,68 +1,143 @@
-//backend/db/models/spot.js
 
 'use strict';
-
-const { Model } = require('sequelize');
-
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
-      // Associations
-      Spot.belongsTo(models.User, { foreignKey: 'ownerId' });
-      Spot.hasMany(models.Review, { foreignKey: 'spotId' });
-      Spot.hasMany(models.SpotImage, { foreignKey: 'spotId' });
+      Spot.belongsTo(models.User, {
+        foreignKey: 'ownerId'
+      });
+
+      Spot.hasMany(models.SpotImage, {
+        foreignKey: 'spotId',
+        onDelete: 'CASCADE',
+        hooks: true,
+      });
+
+      Spot.hasMany(models.Review, {
+        foreignKey: 'spotId',
+        onDelete: 'CASCADE',
+        hooks: true,
+      });
+
+      Spot.hasMany(models.Booking, {
+        foreignKey: 'spotId',
+        onDelete: 'CASCADE',
+        hooks: true,
+      })
+
     }
   }
-
-  Spot.init(
-    {
-      ownerId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users', // Refers to the 'Users' table
-          key: 'id', // Refers to the 'id' field in the 'Users' table
-        },
-      },
-      address: DataTypes.STRING,
-      city: DataTypes.STRING,
-      state: DataTypes.STRING,
-      country: DataTypes.STRING,
-      lat: DataTypes.DECIMAL,
-      lng: DataTypes.DECIMAL,
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      price: DataTypes.DECIMAL,
-      createdAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      avgRating: { // Define avgRating attribute
-        type: DataTypes.FLOAT,
-        defaultValue: 0, // Set a default value
-      },
-      previewImage: { // Define previewImage attribute
-        type: DataTypes.STRING,
-        allowNull: true, // Allow null if no image is provided
-      },
+  
+  Spot.init({
+    ownerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
-    {
-      sequelize,
-      modelName: 'Spot',
-      timestamps: true, // Enables automatic management of createdAt and updatedAt
-    }
-  );
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        required(value) {
+          if (!value) {
+            throw Error ('Street address is required')
+          }
+        }
+      }
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        required(value) {
+          if (!value) {
+            throw Error ('City is required')
+          }
+        }
+      }
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        required(value) {
+          if (!value) {
+            throw Error ('State is required')
+          }
+        }
+      }
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        required(value) {
+          if (!value) {
+            throw Error ('Country is required')
+          }
+        }
+      }
+    },
+    lat: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+      validate: {
+        range(value) {
+          if (value < -90 || value > 90) {
+            throw Error("Latitude must be within -90 and 90")
+          }
+        }
+      }
+    },
+    lng: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+      validate: {
+        range(value) {
+          if (value < -180 || value > 180) {
+            throw Error("Longitude must be within -180 and 180")
+          }
+        }
+      }
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        maxChar(value) {
+          if (value.length >= 50) {
+            throw Error ("Name must be less than 50 characters")
+          }
+        }
+      }
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        required(value) {
+          if (!value) {
+            throw Error ('Description is required')
+          }
+        }
+      }
+    },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+      validate: {
+        positive(value) {
+          if (value <= 0) {
+            throw Error ("Price per day must be a positive number")
+          }
+        }
+      }
+    },
+  }, {
+    sequelize,
+    modelName: 'Spot',
+  });
   return Spot;
 };
