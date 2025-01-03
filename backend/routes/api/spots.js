@@ -198,21 +198,6 @@ router.post(
         res.status(201);
         return res.json(
             spot.dataValues
-                // {
-                // id: spot.id,
-                // ownerId: spot.dataValues.ownerId,
-                // address: spot.dataValues.address,
-                // city: spot.dataValues.city,
-                // state: spot.dataValues.state,
-                // country: spot.dataValues.country,
-                // lat: spot.dataValues.lat,
-                // lng: spot.dataValues.lng,
-                // name: spot.dataValues.name,
-                // description: spot.dataValues.description,
-                // price: spot.dataValues.price,
-                // createdAt: spot.dataValues.createdAt,
-                // updatedAt: spot.dataValues.updatedAt
-            // }
         );
     }
 );
