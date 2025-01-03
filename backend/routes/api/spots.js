@@ -177,7 +177,6 @@ router.post(
             description,
             price,
         } = req.body;        
-        console.log('Received lat:', lat, 'Received lng:', lng);
 
         const ownerId = req.user.id;
         
@@ -187,14 +186,14 @@ router.post(
             city,
             state,
             country,
-            lat,
-            lng,
+            lat: Number(lat), // Ensure these are parsed
+            lng: Number(lng),
+        
             name,
             description,
             price
         })
 
-        console.log('Data 1:', spot.dataValues);
 
         res.status(201);
         return res.json(
@@ -265,13 +264,6 @@ router.get(
         });
 
         const allUserSpots = spots.map(spot => {
-
-            console.log('Before parse - lat:', spot.lat, 'lng:', spot.lng); // Log before parsing
-            spot.lat = parseFloat(spot.lat);
-            spot.lng = parseFloat(spot.lng);
-            console.log('After parse - lat:', spot.lat, 'lng:', spot.lng); // Log after parsing
-
-        
             return {
                 id: spot.dataValues.id,
                 ownerId: spot.dataValues.ownerId,
@@ -279,8 +271,8 @@ router.get(
                 city: spot.dataValues.city,
                 state: spot.dataValues.state,
                 country: spot.dataValues.country,
-                lat: spot.lat,  // parsed lat
-                lng: spot.lng,  // parsed lng
+                lat: spot.lat,  
+                lng: spot.lng, 
                 name: spot.dataValues.name,
                 description: spot.dataValues.description,
                 price: spot.dataValues.price,
@@ -327,9 +319,6 @@ router.get('/:spotId/reviews',
 // Get details of a Spot from an id
 router.get('/:spotId', async (req, res) =>{
     const spotId = req.params.spotId;
-    //     console.log('\nspotId:', spotId,'\n');
-    //     let spot = await Spot.findByPk(spotId)
-    //     console.log('\nspot:', spot)
 
     try{
 
@@ -455,13 +444,9 @@ router.get('/', validateQuery,
       
         delete spot.dataValues.SpotImages;
         
-        spot.lat = parseFloat(spot.lat);
-        spot.lng = parseFloat(spot.lng);
-
         return spot
     })
 )
-        // console.log(`\nspotId: `, spot.id)
 
     const safeSpots = spotsWithRating.map(spot => ({
         id: spot.id,
@@ -493,15 +478,6 @@ router.get('/', validateQuery,
 
 
 
-// Edit a Spot
-
-// const getUserFromCookies = (req, res, next) => {
-//     const token = req.cookies.token;
-//     const decoded = jwt.verify(token, secret);
-//     req.user = decoded.data;
-//     next();
-// }
-
 
 
 router.put(
@@ -528,15 +504,14 @@ router.put(
                 price,
             } = req.body;
     
-            console.log('Updating lat:', lat, 'lng:', lng); // Log update values
 
             spot.set({
                 address: address,
                 city: city,
                 state: state,
                 country: country,
-                lat: lat,
-                lng: lng,
+                lat: Number(lat),  // Ensure they are parsed correctly
+                lng: Number(lng),
                 name: name,
                 description: description,
                 price: price
