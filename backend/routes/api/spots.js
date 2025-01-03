@@ -263,23 +263,30 @@ router.get(
             group: ['Spot.id', 'SpotImages.id']
         });
 
-        const allUserSpots = spots.map(spot => ({
-            id: spot.dataValues.id,
-            ownerId: spot.dataValues.ownerId,
-            address: spot.dataValues.address,
-            city: spot.dataValues.city,
-            state: spot.dataValues.state,
-            country: spot.dataValues.country,
-            lat: spot.dataValues.lat,
-            lng: spot.dataValues.lng,
-            name: spot.dataValues.name,
-            description: spot.dataValues.description,
-            price: spot.dataValues.price,
-            createdAt: spot.dataValues.createdAt,
-            updatedAt: spot.dataValues.updatedAt,
-            avgRating: spot.dataValues.avgRating,
-            previewImage: spot.dataValues.previewImage
-        }));
+        const allUserSpots = spots.map(spot => {
+
+            spot.lat = parseFloat(spot.lat);
+            spot.lng = parseFloat(spot.lng);
+        
+            return {
+                id: spot.dataValues.id,
+                ownerId: spot.dataValues.ownerId,
+                address: spot.dataValues.address,
+                city: spot.dataValues.city,
+                state: spot.dataValues.state,
+                country: spot.dataValues.country,
+                lat: spot.lat,  // parsed lat
+                lng: spot.lng,  // parsed lng
+                name: spot.dataValues.name,
+                description: spot.dataValues.description,
+                price: spot.dataValues.price,
+                createdAt: spot.dataValues.createdAt,
+                updatedAt: spot.dataValues.updatedAt,
+                avgRating: spot.dataValues.avgRating,
+                previewImage: spot.dataValues.previewImage
+            };
+        });
+        
 
         res.status(200);
         return res.json({
@@ -444,6 +451,9 @@ router.get('/', validateQuery,
       
         delete spot.dataValues.SpotImages;
         
+        spot.lat = parseFloat(spot.lat);
+        spot.lng = parseFloat(spot.lng);
+
 
         return spot
     })
