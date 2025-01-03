@@ -177,6 +177,7 @@ router.post(
             description,
             price,
         } = req.body;        
+        console.log('Received lat:', lat, 'Received lng:', lng);
 
         const ownerId = req.user.id;
         
@@ -265,8 +266,11 @@ router.get(
 
         const allUserSpots = spots.map(spot => {
 
+            console.log('Before parse - lat:', spot.lat, 'lng:', spot.lng); // Log before parsing
             spot.lat = parseFloat(spot.lat);
             spot.lng = parseFloat(spot.lng);
+            console.log('After parse - lat:', spot.lat, 'lng:', spot.lng); // Log after parsing
+
         
             return {
                 id: spot.dataValues.id,
@@ -454,7 +458,6 @@ router.get('/', validateQuery,
         spot.lat = parseFloat(spot.lat);
         spot.lng = parseFloat(spot.lng);
 
-
         return spot
     })
 )
@@ -525,7 +528,8 @@ router.put(
                 price,
             } = req.body;
     
-            
+            console.log('Updating lat:', lat, 'lng:', lng); // Log update values
+
             spot.set({
                 address: address,
                 city: city,
