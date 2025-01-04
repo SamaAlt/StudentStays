@@ -458,7 +458,6 @@ router.get('/', validateQuery,
         return spot
     })
 )
-        // console.log(`\nspotId: `, spot.id)
 
     const safeSpots = spotsWithRating.map(spot => ({
         id: spot.id,
@@ -467,7 +466,7 @@ router.get('/', validateQuery,
         city: spot.city,
         state: spot.state,
         country: spot.country,
-        lat: spot.lat,
+        lat: Number(spot.lat),  
         lng: spot.lng,
         name: spot.name,
         description: spot.description,
