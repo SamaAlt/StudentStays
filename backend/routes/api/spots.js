@@ -283,7 +283,7 @@ router.get(
             city: spot.dataValues.city,
             state: spot.dataValues.state,
             country: spot.dataValues.country,
-            lat: parseFloat(spot.dataValues.lat), // Convert lat to a number here
+            lat: spot.dataValues.lat,
             lng: spot.dataValues.lng,
             name: spot.dataValues.name,
             description: spot.dataValues.description,
