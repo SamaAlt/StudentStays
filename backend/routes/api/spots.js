@@ -186,23 +186,36 @@ router.post(
             city,
             state,
             country,
-            lat: Number(lat), // Ensure these are parsed
-            lng: Number(lng),
-        
+            lat,
+            lng,
             name,
             description,
             price
         })
 
+        console.log('Data 1:', spot.dataValues);
 
         res.status(201);
         return res.json(
             spot.dataValues
+                // {
+                // id: spot.id,
+                // ownerId: spot.dataValues.ownerId,
+                // address: spot.dataValues.address,
+                // city: spot.dataValues.city,
+                // state: spot.dataValues.state,
+                // country: spot.dataValues.country,
+                // lat: spot.dataValues.lat,
+                // lng: spot.dataValues.lng,
+                // name: spot.dataValues.name,
+                // description: spot.dataValues.description,
+                // price: spot.dataValues.price,
+                // createdAt: spot.dataValues.createdAt,
+                // updatedAt: spot.dataValues.updatedAt
+            // }
         );
     }
 );
-
-
 
 // Add an Image to a Spot based on the Spot's id
 router.post(
@@ -263,26 +276,23 @@ router.get(
             group: ['Spot.id', 'SpotImages.id']
         });
 
-        const allUserSpots = spots.map(spot => {
-            return {
-                id: spot.dataValues.id,
-                ownerId: spot.dataValues.ownerId,
-                address: spot.dataValues.address,
-                city: spot.dataValues.city,
-                state: spot.dataValues.state,
-                country: spot.dataValues.country,
-                lat: spot.lat,  
-                lng: spot.lng, 
-                name: spot.dataValues.name,
-                description: spot.dataValues.description,
-                price: spot.dataValues.price,
-                createdAt: spot.dataValues.createdAt,
-                updatedAt: spot.dataValues.updatedAt,
-                avgRating: spot.dataValues.avgRating,
-                previewImage: spot.dataValues.previewImage
-            };
-        });
-        
+        const allUserSpots = spots.map(spot => ({
+            id: spot.dataValues.id,
+            ownerId: spot.dataValues.ownerId,
+            address: spot.dataValues.address,
+            city: spot.dataValues.city,
+            state: spot.dataValues.state,
+            country: spot.dataValues.country,
+            lat: parseFloat(spot.dataValues.lat), // Convert lat to a number here
+            lng: spot.dataValues.lng,
+            name: spot.dataValues.name,
+            description: spot.dataValues.description,
+            price: spot.dataValues.price,
+            createdAt: spot.dataValues.createdAt,
+            updatedAt: spot.dataValues.updatedAt,
+            avgRating: spot.dataValues.avgRating,
+            previewImage: spot.dataValues.previewImage
+        }));
 
         res.status(200);
         return res.json({
@@ -290,7 +300,6 @@ router.get(
         });
     }
 );
-
 
 //Get all Reviews by a Spot's id
 router.get('/:spotId/reviews', 
@@ -315,10 +324,12 @@ router.get('/:spotId/reviews',
         {Reviews: reviews});
 })
 
-
 // Get details of a Spot from an id
 router.get('/:spotId', async (req, res) =>{
     const spotId = req.params.spotId;
+    //     console.log('\nspotId:', spotId,'\n');
+    //     let spot = await Spot.findByPk(spotId)
+    //     console.log('\nspot:', spot)
 
     try{
 
@@ -363,7 +374,6 @@ router.get('/:spotId', async (req, res) =>{
     }
     
 })
-
 
 // Get all Spots and Add Query Filter and Pagination
 router.get('/', validateQuery,
@@ -444,9 +454,11 @@ router.get('/', validateQuery,
       
         delete spot.dataValues.SpotImages;
         
+
         return spot
     })
 )
+        // console.log(`\nspotId: `, spot.id)
 
     const safeSpots = spotsWithRating.map(spot => ({
         id: spot.id,
@@ -476,10 +488,7 @@ router.get('/', validateQuery,
     
 })
 
-
-
-
-
+// Edit a Spot
 router.put(
     '/:spotId',
     checkSpotExists,
@@ -504,14 +513,14 @@ router.put(
                 price,
             } = req.body;
     
-
+            
             spot.set({
                 address: address,
                 city: city,
                 state: state,
                 country: country,
-                lat: Number(lat),  // Ensure they are parsed correctly
-                lng: Number(lng),
+                lat: lat,
+                lng: lng,
                 name: name,
                 description: description,
                 price: price
