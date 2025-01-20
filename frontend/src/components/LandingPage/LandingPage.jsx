@@ -7,20 +7,30 @@ const LandingPage = () => {
     useEffect(() => {
         fetch("/api/spots")
             .then((response) => response.json())
-            .then((data) => setSpots(data.Spots))
+            .then((data) => {
+                const spotsWithImages = data.Spots.map((spot) => {
+                    const previewImage = spot.SpotImages?.find((img) => img.preview)?.url;
+                    return {
+                        ...spot,
+                        previewImage: previewImage, 
+                    };
+                });
+                setSpots(spotsWithImages);
+            })
             .catch((error) => console.error("Error fetching spots:", error));
     }, []);
 
     return (
         <div className="landing-page">
-            <h2 className="landing-page-title">Kickstart Your Studies & Make Yourself at Home</h2>
+            <h2 className="landing-page-title">Kickstart Your Studies</h2>
+             <h3>Make Yourself at Home</h3>
             <div className="listings-grid">
                 {spots.map((spot) => (
                     <div className="listing-card" key={spot.id}>
-                        <div className="tooltip">{spot.name}</div> {/* Tooltip moved here */}
+                        <div className="tooltip">{spot.name}</div>
                         <div className="spot-image-container">
                             <img
-                                src={spot.previewImage}
+                                src={spot.previewImage}  
                                 alt={spot.name}
                                 className="spot-image"
                             />
