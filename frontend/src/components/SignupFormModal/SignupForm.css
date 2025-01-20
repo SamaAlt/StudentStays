@@ -1,0 +1,96 @@
+/* SignupForm.css */
+
+/* Modal container */
+.signup-form-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: auto;
+}
+
+/* Title of the form */
+.signup-form-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Form container */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Label for inputs */
+.signup-form-label {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+/* Input fields styling */
+.signup-form-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.signup-form-input:focus {
+  border-color: #007bff;
+}
+
+/* Error messages */
+.signup-form-error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* Submit button styling */
+.signup-form-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signup-form-button:hover {
+  background-color: #0056b3;
+}
+
+/* Add space between the button and error messages */
+.signup-form-button + .signup-form-error {
+  margin-top: 15px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .signup-form-modal {
+      padding: 20px;
+  }
+
+  .signup-form-title {
+      font-size: 1.5rem;
+  }
+
+  .signup-form-input {
+      font-size: 0.9rem;
+  }
+
+  .signup-form-button {
+      font-size: 1rem;
+  }
+}

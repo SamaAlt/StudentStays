@@ -1,0 +1,159 @@
+/* Global Navigation Styles */
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container img {
+  height: 40px;
+  width: auto;
+}
+
+/* Profile Button and Dropdown */
+.profile-button-container {
+  position: relative;
+}
+
+.profile-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  color: #333;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  padding: 10px 0;
+  list-style: none;
+  margin: 0;
+  z-index: 10;
+}
+
+.profile-dropdown.hidden {
+  display: none;
+}
+
+.profile-dropdown li {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.profile-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.profile-dropdown button {
+  padding: 10px 15px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4f;
+  font-size: 1rem;
+}
+
+.profile-dropdown button:hover {
+  color: #e60000;
+}
+
+/* Modal Menu Item */
+.open-modal-menu-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.open-modal-menu-item:hover {
+  color: #0056b3;
+}
+
+/* Navigation Links and Modals */
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  margin: 0 15px;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #007bff;
+}
+
+/* Modal Styling (for Login and Signup) */
+.modal-container {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
+}
+
+.modal-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.modal-body {
+  font-size: 1rem;
+  color: #666;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 15px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .nav-bar {
+      padding: 10px 20px;
+  }
+
+  .logo-container img {
+      height: 30px;
+  }
+
+  .profile-button {
+      font-size: 1.5rem;
+  }
+
+  .profile-dropdown {
+      min-width: 180px;
+  }
+}
