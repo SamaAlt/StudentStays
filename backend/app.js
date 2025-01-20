@@ -18,11 +18,11 @@ app.use(express.json());
 
 // Security Middleware
 if (!isProduction) {
-  // Enable CORS only in development
+  // enable cors only in development
   app.use(cors());
 }
 
-// Helmet helps set a variety of headers to better secure your app
+// helmet helps set a variety of headers to better secure your app
 app.use(
   helmet.crossOriginResourcePolicy({
     policy: "cross-origin"
@@ -40,16 +40,7 @@ app.use(
   })
 );
 
-// Import routes
-const routes = require('./routes');
-
-// Test route for the root path
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello, World!' });
-});
-
-// Connect all the routes
-app.use(routes);
+app.use(routes); // Connect all the routes
 
 
 // Catch unhandled requests and forward to error handler
