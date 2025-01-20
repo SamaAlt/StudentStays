@@ -1,4 +1,3 @@
-// backend/app.js
 const express = require('express');
 require('express-async-errors');
 const morgan = require('morgan');
@@ -19,11 +18,11 @@ app.use(express.json());
 
 // Security Middleware
 if (!isProduction) {
-  // enable cors only in development
+  // Enable CORS only in development
   app.use(cors());
 }
 
-// helmet helps set a variety of headers to better secure your app
+// Helmet helps set a variety of headers to better secure your app
 app.use(
   helmet.crossOriginResourcePolicy({
     policy: "cross-origin"
@@ -41,8 +40,16 @@ app.use(
   })
 );
 
-app.use(routes); // Connect all the routes
+// Import routes
+const routes = require('./routes');
 
+// Connect all the routes
+app.use(routes);
+
+// Test route for the root path
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello, World!' });
+});
 
 // Catch unhandled requests and forward to error handler
 app.use((_req, _res, next) => {
