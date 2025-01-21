@@ -1,0 +1,172 @@
+/* ManageSpots.css */
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+/* Container for the user's owned spots */
+.ownedSpots {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 1200px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* No spots message */
+.noSpots {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.noSpots p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+}
+
+.noSpots button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.noSpots button:hover {
+    background-color: #2980b9;
+}
+
+/* Spot List container */
+.spotList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Individual spot card */
+.eachSpot {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.eachSpot:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.eachSpot img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+/* Location and Rating section */
+.locationAndRating {
+    padding: 15px;
+    font-size: 1rem;
+}
+
+.locationAndRating p {
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* Price Section */
+.priceSection {
+    padding: 10px 15px;
+    background-color: #f1f1f1;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+/* Update and Delete button section */
+.updateAndDeleteButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #ecf0f1;
+    border-top: 2px solid #ecf0f1;
+}
+
+.updateAndDeleteButton button {
+    padding: 8px 16px;
+    font-size: 1rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.updateAndDeleteButton button:hover {
+    background-color: #2980b9;
+}
+
+.updateAndDeleteButton div {
+    cursor: pointer;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .ownedSpots {
+        padding: 15px;
+    }
+
+    .spotList {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+
+    .eachSpot img {
+        height: 180px;
+    }
+
+    .priceSection {
+        font-size: 1rem;
+    }
+
+    .updateAndDeleteButton button {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ownedSpots {
+        padding: 10px;
+    }
+
+    .eachSpot {
+        margin-bottom: 20px;
+    }
+    
+    .spotList {
+        grid-template-columns: 1fr;
+    }
+
+    .priceSection {
+        font-size: 1rem;
+    }
+
+    .updateAndDeleteButton button {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}

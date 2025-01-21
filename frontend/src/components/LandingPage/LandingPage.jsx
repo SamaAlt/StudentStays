@@ -43,7 +43,7 @@ const LandingPage = () => {
                             <div className="spot-location">
                                 <p>{`${spot.city}, ${spot.state}`}</p>
                                 <p className="spot-rating">
-                                    ✨ {spot.avgStarRating ? spot.avgStarRating.toFixed(1) : "New"}
+                                    ✨ {spot.avgStarRating ? spot.avgStarRating.toFixed(1) : "Trending"}
                                 </p>
                             </div>
                             <p>

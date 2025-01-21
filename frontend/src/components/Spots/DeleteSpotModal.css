@@ -1,0 +1,88 @@
+/* DeleteSpotModal.css */
+
+.modalSection {
+    background-color: #ffffff;
+    padding: 20px;
+    max-width: 400px;
+    margin: 50px auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+.deleteTitle {
+    font-size: 1.5rem;
+    color: #e74c3c;
+    margin-bottom: 10px;
+}
+
+.deleteMessage {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}
+
+.deleteButtons {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.delete-button,
+.cancel-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+.delete-button:active {
+    background-color: #a93226;
+}
+
+.cancel-button {
+    background-color: #bdc3c7;
+    color: #2c3e50;
+}
+
+.cancel-button:hover {
+    background-color: #95a5a6;
+    transform: scale(1.05);
+}
+
+.cancel-button:active {
+    background-color: #7f8c8d;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .modalSection {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .deleteButtons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .delete-button,
+    .cancel-button {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+}

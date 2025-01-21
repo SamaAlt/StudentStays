@@ -1,43 +1,60 @@
-/* Global Navigation Styles */
+/* Navigation.css */
+
 .nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  background-color: #2c3e50;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .logo-container img {
-  height: 150px;
-  width: auto;
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-/* Profile Button and Dropdown */
-.profile-button-container {
-  position: relative;
+.logo-container img:hover {
+  transform: scale(1.1);
 }
+
+.profile-button-container {
+  display: flex;
+  align-items: center;
+}
+
+/* ProfileButton.css */
 
 .profile-button {
-  background: transparent;
+  background: none;
   border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
   cursor: pointer;
-  font-size: 2rem;
-  color: #333;
+  transition: color 0.3s ease;
+}
+
+.profile-button:hover {
+  color: #3498db;
 }
 
 .profile-dropdown {
   position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  padding: 10px 0;
+  top: 60px;
+  right: 20px;
+  background: #ffffff;
+  color: #2c3e50;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
   list-style: none;
-  margin: 0;
-  z-index: 10;
+  padding: 10px 0;
+  min-width: 200px;
+  z-index: 1000;
 }
 
 .profile-dropdown.hidden {
@@ -45,115 +62,60 @@
 }
 
 .profile-dropdown li {
-  padding: 10px 15px;
-  cursor: pointer;
+  padding: 10px 20px;
   font-size: 1rem;
-  color: #333;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .profile-dropdown li:hover {
-  background-color: #f0f0f0;
+  background-color: #f2f2f2;
 }
 
 .profile-dropdown button {
-  padding: 10px 15px;
-  background-color: transparent;
+  background: none;
   border: none;
-  cursor: pointer;
-  color: #ff4d4f;
+  color: #e74c3c;
   font-size: 1rem;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
 }
 
 .profile-dropdown button:hover {
-  color: #e60000;
+  color: #c0392b;
 }
 
-/* Modal Menu Item */
-.open-modal-menu-item {
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #007bff;
-  transition: color 0.3s ease;
+/* OpenModalMenuItem.css */
+
+.profile-dropdown li:hover {
+  background-color: #ecf0f1;
 }
 
-.open-modal-menu-item:hover {
-  color: #0056b3;
+/* General Styling for OpenModalMenuItem */
+.profile-dropdown li:last-child {
+  border-top: 1px solid #bdc3c7;
+  margin-top: 10px;
 }
 
-/* Navigation Links and Modals */
-nav a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1rem;
-  margin: 0 15px;
-  transition: color 0.3s ease;
-}
-
-nav a:hover {
-  color: #007bff;
-}
-
-/* Modal Styling (for Login and Signup) */
-.modal-container {
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  width: 100%;
-  margin: auto;
-}
-
-.modal-header {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.modal-body {
-  font-size: 1rem;
-  color: #666;
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 15px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Responsive Styling */
+/* Media Queries for Responsiveness */
 @media (max-width: 768px) {
   .nav-bar {
-      padding: 10px 20px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px;
   }
 
   .logo-container img {
-      height: 30px;
-  }
-
-  .profile-button {
-      font-size: 1.5rem;
+      height: 40px;
   }
 
   .profile-dropdown {
-      min-width: 180px;
+      right: 10px;
+      min-width: 150px;
+  }
+
+  .profile-dropdown li {
+      font-size: 0.9rem;
   }
 }

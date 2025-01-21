@@ -1,73 +1,65 @@
 /* LandingPage.css */
 
-/* Overall landing page container */
 .landing-page {
-  padding: 40px;
-  background-color: #f9f9f9;
+  padding: 20px;
   font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
 }
 
-/* Landing page title */
 .landing-page-title {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
   text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+  font-weight: bold;
 }
+
 .landing-page-title2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
+  font-size: 1.8rem;
+  color: #34495e;
   margin-bottom: 30px;
-  color: #333;
+  text-align: center;
 }
-/* Grid layout for listings */
+
 .listings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  padding: 10px;
+  padding: 20px 0;
 }
 
-/* Individual listing card styling */
 .listing-card {
-  background-color: white;
-  border-radius: 8px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .listing-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Tooltip text styling */
 .tooltip {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 5px 10px;
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 1rem;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  border-radius: 5px;
+  display: none;
 }
 
-/* Tooltip visibility on hover */
 .listing-card:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
+  display: block;
 }
 
-/* Image container for spots */
 .spot-image-container {
+  position: relative;
   width: 100%;
   height: 200px;
   overflow: hidden;
@@ -77,49 +69,34 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-bottom: 2px solid #f0f0f0;
+  transition: transform 0.3s ease;
 }
 
-/* Spot details section */
+.listing-card:hover .spot-image {
+  transform: scale(1.1);
+}
+
 .spot-details {
   padding: 15px;
+  font-size: 0.9rem;
+  color: #2c3e50;
 }
 
 .spot-location {
-  font-size: 1rem;
-  color: #777;
-  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .spot-rating {
-  font-size: 1.2rem;
-  color: #ffb400;
-  margin-top: 5px;
-}
-
-.spot-details p {
-  margin: 5px 0;
+  background: #27ae60;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.8rem;
 }
 
 .spot-details strong {
-  font-size: 1.3rem;
-  color: #333;
-}
-
-/* Media query for responsiveness */
-@media (max-width: 768px) {
-  .landing-page {
-      padding: 20px;
-  }
-
-  .landing-page-title {
-      font-size: 1.5rem;
-  }
-  .landing-page-title2 {
-    font-size: 1rem;
-}
-
-  .listings-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
+  color: #e74c3c;
 }

@@ -1,0 +1,119 @@
+/* PostReviewFormModal.css */
+
+.postReviewForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.reviewTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.reviewCommentSection {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.reviewInputBox {
+    width: 100%;
+    max-width: 450px;
+    height: 40px;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    color: #2c3e50;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reviewInputBox:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.starsSection {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.star {
+    cursor: pointer;
+    font-size: 2rem;
+    color: #f1c40f;
+    transition: transform 0.2s ease;
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+.submitButtonSection {
+    margin-top: 20px;
+}
+
+.reviewSubmitButton {
+    background-color: #2ecc71;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.reviewSubmitButton:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+.reviewSubmitButton:disabled {
+    background-color: #bdc3c7;
+    color: #7f8c8d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Error Message Styling */
+.reviewCommentSection span {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .postReviewForm {
+        padding: 15px;
+    }
+
+    .reviewInputBox {
+        width: 100%;
+    }
+
+    .star {
+        font-size: 1.8rem;
+    }
+
+    .reviewSubmitButton {
+        width: 100%;
+    }
+}

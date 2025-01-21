@@ -1,0 +1,126 @@
+/* Reviews.css */
+
+.eachReview {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+    color: #2c3e50;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.starAndCountSection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #34495e;
+}
+
+.reviewItem {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.reviewItem:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.userFirstName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 5px;
+}
+
+.reviewDate {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+.reviewText {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.reviewText:first-letter {
+    text-transform: capitalize;
+}
+
+.reviewItem .delete-button {
+    float: right;
+    font-size: 0.9rem;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reviewItem .delete-button:hover {
+    background-color: #c0392b;
+}
+
+.postReviewButton {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.postReviewButton button {
+    background-color: #2ecc71;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.postReviewButton button:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+.postReviewButton button:disabled {
+    background-color: #bdc3c7;
+    color: #7f8c8d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+p {
+    font-size: 1rem;
+    color: #2c3e50;
+    margin: 10px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .eachReview {
+        padding: 15px;
+    }
+
+    .reviewItem {
+        padding: 10px;
+    }
+
+    .postReviewButton button {
+        width: 100%;
+        padding: 10px;
+    }
+}
