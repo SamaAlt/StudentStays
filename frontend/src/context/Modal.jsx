@@ -50,7 +50,7 @@ export function Modal() {
       <div id="modal-content">
         <div id="modal-header">
           <button onClick={closeModal} className="close-button">
-            {closeButtonEmoji} Close
+            {closeButtonEmoji}
           </button>
         </div>
         <div>{modalContent}</div>
