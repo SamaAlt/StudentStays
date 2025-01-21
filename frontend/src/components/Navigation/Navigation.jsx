@@ -14,7 +14,15 @@ function Navigation({ isLoaded }) {
           <img src={logo} alt="StudentStays Logo" />
         </Link>
       </div>
-
+      {/* Navigation Buttons */}
+      <div className="nav-buttons">
+        {sessionUser && (
+          <Link to="/spots/new" className="create-spot-link">
+            Create a New Spot
+          </Link>
+        )}
+      </div>
+      
       <div className="profile-button-container">
         {isLoaded && <ProfileButton user={sessionUser} />}
       </div>
