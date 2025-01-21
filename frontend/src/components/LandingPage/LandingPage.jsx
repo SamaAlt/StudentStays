@@ -47,7 +47,7 @@ const LandingPage = () => {
                                 </p>
                             </div>
                             <p>
-                                <strong>${spot.price}</strong> / night
+                                <strong>${spot.price}</strong> per night
                             </p>
                         </div>
                     </div>

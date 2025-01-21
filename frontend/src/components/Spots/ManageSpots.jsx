@@ -62,7 +62,7 @@ function ManageSpots() {
             </div>
 
             <div className="priceSection">
-                <p data-testid="spot-price">$ {spot.price}/night</p>
+                <p data-testid="spot-price">$ {spot.price} per night</p>
             </div>
 
               

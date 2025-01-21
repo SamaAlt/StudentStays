@@ -68,7 +68,7 @@ function SpotDetail() {
               {spot.numReviews ? `· ${spot.numReviews} Review${spot.numReviews === 1 ? '' : 's'}` : ''}
             </span>
           </div>
-          <p data-testid="spot-price">${spot.price} / night</p>
+          <p data-testid="spot-price">${spot.price} per night</p>
           <button data-testid="reserve-button" onClick={handleReserveClick}>Reserve</button>
         </div>
       </div>
