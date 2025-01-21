@@ -1,138 +1,121 @@
 /* Navigation.css */
 
+/* General Reset */
+body, ul, li, button, a {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  font-family: Arial, sans-serif;
+}
+
 .nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
   background-color: white;
-  color: #333;  /* Dark gray text for contrast */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* Light shadow for a soft effect */
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  transition: box-shadow 0.3s ease; /* Smooth transition on scroll */
-}
-
-.nav-bar:hover {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Slightly heavier shadow on hover */
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo-container img {
-  height: 150px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+  max-height: 50px;
+  display: block;
 }
 
-.logo-container img:hover {
-  transform: scale(1.05);  /* Slight scale effect on hover */
+.nav-buttons .create-spot-link {
+  color: red;
+  border: 1px solid red;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: white;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.nav-buttons {
-  margin-right: auto;
-  margin-left: 20px;
+.nav-buttons .create-spot-link:hover {
+  background-color: red;
+  color: white;
 }
 
-.profile-button-container {
+.profile-button-container button {
   display: flex;
   align-items: center;
-}
-
-/* ProfileButton.css */
-
-.profile-button {
-  background: none;
+  gap: 5px;
+  background: white;
+  color: gray;
   border: none;
-  color: #333;  /* Dark gray for profile button */
-  font-size: 1.5rem;
+  font-size: 16px;
   cursor: pointer;
-  transition: color 0.3s ease, transform 0.3s ease;
-  min-width: 100px; /* Minimum width */
-  min-height: 100px; /* Minimum height */
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.profile-button:hover {
-  color: #3498db;  /* Blue color for hover */
-  transform: scale(1.05); /* Slight scale effect on hover */
+.profile-button-container button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-/* Profile Dropdown */
 
 .profile-dropdown {
   position: absolute;
-  top: 60px;
-  right: 20px;
+  right: 10px;
+  top: 50px;
   background: white;
-  color: #333;  /* Dark gray text */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  /* Soft shadow */
-  border-radius: 8px;
-  list-style: none;
-  padding: 10px 0;
-  min-width: 180px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  width: 200px;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
 }
 
 .profile-dropdown.hidden {
   display: none;
 }
 
-.profile-dropdown li {
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.profile-dropdown .subsection1 {
+  padding: 10px;
+  border-bottom: 1px solid lightgray;
 }
 
-.profile-dropdown li:hover {
-  background-color: #f7f7f7;  /* Light gray background on hover */
+.profile-dropdown .subsection2,
+.profile-dropdown .subsection3 {
+  padding: 10px;
+}
+
+.profile-dropdown .manage-spots-link {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  transition: color 0.2s ease;
+}
+
+.profile-dropdown .manage-spots-link:hover {
+  color: darkred;
 }
 
 .profile-dropdown button {
-  background: none;
+  background: red;
+  color: white;
   border: none;
-  color: #e74c3c;  /* Red color for the button */
-  font-size: 1rem;
+  border-radius: 4px;
+  padding: 5px 10px;
   cursor: pointer;
-  padding: 5px;
-  transition: color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 .profile-dropdown button:hover {
-  color: #c0392b;  /* Darker red on hover */
+  background-color: darkred;
 }
 
-.profile-dropdown li:last-child {
-  border-top: 1px solid #e1e1e1;  /* Light gray border between items */
-  margin-top: 10px;
+.auth-links li {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-  .nav-bar {
-    flex-direction: column;
-    align-items: stretch; /* Make nav-bar children stretch to fill width */
-    padding: 10px;
-  }
-
-  .nav-buttons {
-    margin-right: auto;
-  }
-
-  .profile-button-container {
-    align-self: flex-end; /* Align the profile button container to the right */
-    margin-top: 10px; /* Add spacing from other elements if needed */
-  }
-
-  .logo-container img {
-    height: 80px;
-  }
-
-  .profile-dropdown {
-    right: 10px;
-    min-width: 150px;
-  }
-
-  .profile-dropdown li {
-    font-size: 0.9rem;
-  }
+.auth-links li:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }

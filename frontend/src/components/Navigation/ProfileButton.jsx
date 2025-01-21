@@ -1,18 +1,23 @@
+// frontend/src/components/Navigation/ProfileButton.jsx
+
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaBars, FaUserCircle } from 'react-icons/fa';
 import * as sessionActions from '../../store/session';
+import { NavLink, useNavigate  } from 'react-router-dom';
 import OpenModalMenuItem from './OpenModalMenuItem';
-import LoginFormModal from '../LoginFormModal/LoginFormModal';
-import SignupFormModal from '../SignupFormModal/SignupFormModal';
+import LoginFormModal from '../LoginFormModal';
+import SignupFormModal from '../SignupFormModal';
+import './Navigation.css';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
-    e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
+    e.stopPropagation();
     setShowMenu(!showMenu);
   };
 
@@ -35,41 +40,66 @@ function ProfileButton({ user }) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    navigate(`/`);
     closeMenu();
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
-    <>
-      <button className="profile-button" onClick={toggleMenu}>
-        <FaUserCircle />
-      </button>
+    <div>
+      <div className='profile-button'>
+        <button onClick={toggleMenu}>
+          <FaBars />
+          <FaUserCircle />
+        </button>
+      </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>Hello, {user.firstName}</li>
-            <li>{user.email}</li>
-            <li>
-              <button onClick={logout}>Log Out</button>
-            </li>
+            <div className='login-menu'>
+              
+              <div className='subsection1'>
+                <div>
+                  Hello, {user.firstName}
+                </div>
+                <div>
+                  {user.email}
+                </div>
+              </div>
+
+              <div className='subsection2'>
+                <NavLink to='/spots/current' onClick={closeMenu} className='manage-spots-link'>
+                  Manage Spots
+                </NavLink>
+              </div>
+
+              <div className='subsection3'>
+                <button onClick={logout}>Log Out</button>
+              </div>
+
+            </div>
           </>
         ) : (
           <>
-            <OpenModalMenuItem
-              itemText="Log In"
-              onItemClick={closeMenu}
-              modalComponent={<LoginFormModal />}
-            />
-            <OpenModalMenuItem
-              itemText="Sign Up"
-              onItemClick={closeMenu}
-              modalComponent={<SignupFormModal />}
-            />
+            <div className='auth-links'>
+              <OpenModalMenuItem
+                // buttonText="Sign Up"
+                itemText="Sign Up"
+                onItemClick={closeMenu}
+                modalComponent={<SignupFormModal />}
+              />
+              <OpenModalMenuItem
+                // buttonText="Log In"
+                itemText="Log In"
+                onItemClick={closeMenu}
+                modalComponent={<LoginFormModal />}
+              />
+            </div>
           </>
         )}
       </ul>
-    </>
+    </div>
   );
 }
 
