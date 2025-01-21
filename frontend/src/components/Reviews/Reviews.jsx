@@ -35,7 +35,7 @@ function Reviews() {
   }, [dispatch, spotId, currentUser]);
 
   if (isLoading) {
-    return <p>Loading⏳</p>;
+    return <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." className="loadingGif" />;
   }
 
   const sortedReviews = Object.values(reviews).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

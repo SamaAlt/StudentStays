@@ -42,16 +42,13 @@ export function Modal() {
   
   if (!modalRef || !modalRef.current || !modalContent) return null;
 
-  // Example of replacing Font Awesome icons with emojis
-  const closeButtonEmoji = '❌'; // Red cross emoji
-  const modalHeaderEmoji = '🔔'; // Bell emoji (or any other icon emoji)
+  const closeButtonEmoji = '❌'; 
 
   return ReactDOM.createPortal(
     <div id="modal">
       <div id="modal-background" onClick={closeModal} />
       <div id="modal-content">
         <div id="modal-header">
-          <span>{modalHeaderEmoji} Modal Title</span>
           <button onClick={closeModal} className="close-button">
             {closeButtonEmoji} Close
           </button>

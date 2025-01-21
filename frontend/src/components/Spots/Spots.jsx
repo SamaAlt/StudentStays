@@ -20,7 +20,7 @@ function Spots() {
   }, [dispatch]);
 
   if (isLoading) {
-    return <p>Loading⏳</p>;
+    return <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." className="loadingGif" />;
   }
 
   const redirecting = (spotId) => {

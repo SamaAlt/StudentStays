@@ -42,7 +42,7 @@ function UpdateSpotForm() {
   }, [spot]);
 
   if (isLoading) {
-    return <p>Loading⏳</p>;
+    return <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." className="loadingGif" />;
   }
   
   const handleSubmit = async (e) => {
