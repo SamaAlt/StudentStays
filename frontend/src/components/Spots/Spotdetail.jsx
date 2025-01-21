@@ -65,7 +65,7 @@ function SpotDetail() {
           <div className="reviewAndCount">
             <StarAndRating avgRating={spot.avgStarRating} />
             <span>
-              {spot.numReviews ? `· ${spot.numReviews} Review${spot.numReviews === 1 ? '' : 's'}` : ''}
+              {spot.numReviews ? `${spot.numReviews} Review${spot.numReviews === 1 ? '' : 's'}` : ''}
             </span>
           </div>
           <p data-testid="spot-price">${spot.price} per night</p>

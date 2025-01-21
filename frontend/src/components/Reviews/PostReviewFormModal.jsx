@@ -56,7 +56,7 @@ function PostReviewFormModal() {
                             style={{ fontSize: '24px', cursor: 'pointer' }} 
                             onClick={() => setRating(starNumber)}
                         >
-                            {activeRating >= starNumber ? "⭐" : "☆"}
+                            {activeRating >= starNumber ? "✨" : "☆"}
                         </span>
                     </label>
                 ))}
