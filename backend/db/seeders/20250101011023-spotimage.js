@@ -22,7 +22,6 @@ module.exports = {
       { spotId: 9, url: 'https://picsum.photos/200/300', preview: true, createdAt: new Date(), updatedAt: new Date() },
       { spotId: 10, url: 'https://picsum.photos/200/300', preview: true, createdAt: new Date(), updatedAt: new Date() },
       { spotId: 11, url: 'https://picsum.photos/200/300', preview: true, createdAt: new Date(), updatedAt: new Date() },
-      { spotId: 12, url: 'https://picsum.photos/200/300', preview: true, createdAt: new Date(), updatedAt: new Date() },
     ], { validate: true });
   },
 
