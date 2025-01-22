@@ -55,9 +55,9 @@ function Reviews() {
           {console.log("Has Reviewed: ", checkReviewedSpot.length > 0)}
           {currentUser.id !== spot.ownerId && (
             <>
-              <p onClick={() => setShowModal(true)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+              <button onClick={() => setShowModal(true)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
                 Post a review
-              </p>
+              </button>
               <PostReviewButton
                 user={currentUser}
                 spotOwnerId={spot.ownerId}
