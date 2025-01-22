@@ -47,17 +47,21 @@ function CreateSpot() {
         if (description.length < 30) validationErrors.description = "Description needs 30 or more characters";
         if (!title) validationErrors.title = "Name is required";
         if (!price) validationErrors.price = "Price per night is required";
-        // if (!previewImage) {
-        //     validationErrors.previewImage = "Must include 4 images. Preview image URL is required";
-        //   } else if (!previewImage.endsWith(".png") && !previewImage.endsWith(".jpg") && !previewImage.endsWith(".jpeg")) {
-        //     validationErrors.previewImage = "Must include 4 images. Preview image URL must end in .png, .jpg, or .jpeg";
-        //   }
         if (!previewImage) {
-          validationErrors.previewImage = "Must include 4 images. Preview image URL is required";
-      } else if (!isValidURL(previewImage)) {
-          validationErrors.previewImage = "Must include 4 images. Preview image URL must be a valid URL";
-      }
-      
+            validationErrors.previewImage = "Preview image URL is required";
+          } else if (!previewImage.endsWith(".png") && !previewImage.endsWith(".jpg") && !previewImage.endsWith(".jpeg")) {
+            validationErrors.previewImage = "Must add 4 images. Preview image URL must end in .png, .jpg, or .jpeg";
+          }
+        const isValidImageUrl = (url) => {
+            return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg");
+          };
+        if (image1 && !isValidImageUrl(image1)) validationErrors.image1 = "Image URL must end in .png, .jpg, or .jpeg";
+        if (image2 && !isValidImageUrl(image2)) validationErrors.image2 = "Image URL must end in .png, .jpg, or .jpeg";
+        if (image3 && !isValidImageUrl(image3)) validationErrors.image3 = "Image URL must end in .png, .jpg, or .jpeg";
+        if (image4 && !isValidImageUrl(image4)) validationErrors.image4 = "Image URL must end in .png, .jpg, or .jpeg";
+
+
+
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
@@ -92,15 +96,7 @@ function CreateSpot() {
 
           redirecting(spotId);
     };
-// Add the isValidURL function here
-const isValidURL = (url) => {
-  try {
-      new URL(url);
-      return true;
-  } catch {
-      return false;
-  }
-};
+
     const redirecting = (spotId) => {
         navigate(`/spots/${spotId}`);
     };

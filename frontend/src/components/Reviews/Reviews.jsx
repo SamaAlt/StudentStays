@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllReviews, getUserReviewsThunk } from "../../store/review";
@@ -8,6 +7,7 @@ import { getSpotDetail } from "../../store/spots";
 import PostReviewButton from "./PostReviewModalButton";
 import DeleteReviewButton from "./DeleteReviewButton";
 import StarAndRating from "./StarAndRating";
+
 function Reviews() {
   const dispatch = useDispatch();
   const { spotId } = useParams();
@@ -17,7 +17,8 @@ function Reviews() {
   const spot = useSelector((state) => state.spots.targetSpot);
   const userReviews = useSelector((state) => state.reviews.currentUserReviews);
 
-  const checkReviewedSpot = currentUser ? Object.values(userReviews).filter((e) => e.spotId == spotId): [];
+  // Check if the current user has reviewed the spot
+  const checkReviewedSpot = currentUser ? Object.values(userReviews).filter((e) => e.spotId === spotId) : [];
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,16 +39,21 @@ function Reviews() {
     return <img src="https://i.gifer.com/ZZ5H.gif" alt="Loading..." className="loadingGif" />;
   }
 
+  // Sort reviews by creation date
   const sortedReviews = Object.values(reviews).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  // Determine if the "Post a review" message should be shown
   const showFirstPostReviewMessage = sortedReviews.length === 0 && currentUser && currentUser.id !== spot.ownerId;
 
   return (
     <div className="eachReview">
       <div className="starAndCountSection">
-      <StarAndRating avgRating={spot.avgStarRating} />
-      <span>{spot.numReviews? `· ${spot.numReviews} Review${spot.numReviews === 1 ? '' : 's'}`: ''}</span>
+        <StarAndRating avgRating={spot.avgStarRating} />
+        <span>{spot.numReviews ? `· ${spot.numReviews} Review${spot.numReviews === 1 ? '' : 's'}` : ''}</span>
       </div>
-      {currentUser && !checkReviewedSpot.length && currentUser.id !== spot.ownerId && ( <PostReviewButton />)}
+      {currentUser && !checkReviewedSpot.length && currentUser.id !== spot.ownerId && (
+        <PostReviewButton />
+      )}
       {showFirstPostReviewMessage ? (
         <p>Post a review</p>
       ) : (
