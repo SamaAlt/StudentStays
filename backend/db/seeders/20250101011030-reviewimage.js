@@ -27,6 +27,46 @@ module.exports = {
       { 
         reviewId: 2,
         url:'imageUrl2'
+      },
+      { 
+        reviewId: 3,
+        url: 'imageUrl3',
+      },
+      { 
+        reviewId: 4,
+        url: 'imageUrl4',
+      },
+      { 
+        reviewId: 5,
+        url: 'imageUrl5',
+      },
+      { 
+        reviewId: 6,
+        url: 'imageUrl6',
+      },
+      { 
+        reviewId: 7,
+        url: 'imageUrl7',
+      },
+      { 
+        reviewId: 8,
+        url: 'imageUrl8',
+      },
+      { 
+        reviewId: 9,
+        url: 'imageUrl9',
+      },
+      { 
+        reviewId: 10,
+        url: 'imageUrl10',
+      },
+      { 
+        reviewId: 11,
+        url: 'imageUrl11',
+      },
+      { 
+        reviewId: 12,
+        url: 'imageUrl12',
       }
     ],{ validate: true })
   },
