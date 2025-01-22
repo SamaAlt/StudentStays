@@ -1,14 +1,12 @@
-// components/reviews/postreviewmodalbutton.jsx
-
+import './PostReviewModalButton.css';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import PostReviewFormModal from './PostReviewFormModal';
-
 
 function PostReviewButton({ user, spotOwnerId, hasReviewed }) {
   const canPostReview = user?.isLoggedIn && user.id !== spotOwnerId && !hasReviewed;
 
   return (
-    <div className="PostReviewButton" data-testid="review-button">
+    <div className="PostReviewButton buttonBorder" data-testid="review-button">
       {canPostReview ? (
         <OpenModalButton
           modalComponent={<PostReviewFormModal />}
