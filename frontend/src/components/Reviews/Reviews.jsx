@@ -7,6 +7,7 @@ import { getSpotDetail } from "../../store/spots";
 import PostReviewButton from "./PostReviewModalButton";
 import DeleteReviewButton from "./DeleteReviewButton";
 import StarAndRating from "./StarAndRating";
+import PostReviewFormModal from './PostReviewFormModal'; // Ensure you have this PostReviewFormModal component
 
 function Reviews() {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ function Reviews() {
   const checkReviewedSpot = currentUser ? Object.values(userReviews).filter((e) => e.spotId == spotId) : [];
 
   const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Add state for modal visibility
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +41,6 @@ function Reviews() {
   }
 
   const sortedReviews = Object.values(reviews).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  const showFirstPostReviewMessage = sortedReviews.length === 0 && currentUser && currentUser.id !== spot.ownerId;
 
   return (
     <div className="eachReview">
@@ -52,33 +53,37 @@ function Reviews() {
           {console.log("User: ", currentUser)}
           {console.log("Spot Owner: ", spot.ownerId)}
           {console.log("Has Reviewed: ", checkReviewedSpot.length > 0)}
-          {currentUser.id !== spot.ownerId && checkReviewedSpot.length === 0 && (
-            <PostReviewButton
-              user={currentUser}
-              spotOwnerId={spot.ownerId}
-              hasReviewed={checkReviewedSpot.length > 0}
-            />
+          {currentUser.id !== spot.ownerId && (
+            <>
+              <p onClick={() => setShowModal(true)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                Post a review
+              </p>
+              <PostReviewButton
+                user={currentUser}
+                spotOwnerId={spot.ownerId}
+                hasReviewed={checkReviewedSpot.length > 0}
+              />
+            </>
           )}
         </div>
       )}
-      {showFirstPostReviewMessage ? (
-        <p>Post a review</p>
-      ) : (
-        sortedReviews.map((review) => {
-          const createdDate = new Date(review.createdAt);
-          const options = { year: 'numeric', month: 'long' };
-          const normalDate = createdDate.toLocaleDateString(undefined, options);
-          return (
-            <div key={review.id} className="reviewItem">
-              {currentUser && currentUser.id === review.userId ? (
-                <DeleteReviewButton reviewId={review.id} spotId={spotId} />
-              ) : ("")}
-              <h3 className="userFirstName">{review.User.firstName}</h3>
-              <p className="reviewDate">{normalDate}</p>
-              <p className="reviewText">{review.review}</p>
-            </div>
-          );
-        })
+      {sortedReviews.map((review) => {
+        const createdDate = new Date(review.createdAt);
+        const options = { year: 'numeric', month: 'long' };
+        const normalDate = createdDate.toLocaleDateString(undefined, options);
+        return (
+          <div key={review.id} className="reviewItem">
+            {currentUser && currentUser.id === review.userId ? (
+              <DeleteReviewButton reviewId={review.id} spotId={spotId} />
+            ) : ("")}
+            <h3 className="userFirstName">{review.User.firstName}</h3>
+            <p className="reviewDate">{normalDate}</p>
+            <p className="reviewText">{review.review}</p>
+          </div>
+        );
+      })}
+      {showModal && (
+        <PostReviewFormModal onClose={() => setShowModal(false)} spotId={spotId} />
       )}
     </div>
   );
