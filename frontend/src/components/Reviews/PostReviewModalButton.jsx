@@ -1,8 +1,9 @@
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import PostReviewFormModal from './PostReviewFormModal';
 
-function PostReviewButton({ user }) {
-  const canPostReview = user?.type === 'demo' || user?.isLoggedIn;
+
+function PostReviewButton({ user, spotOwnerId, hasReviewed }) {
+  const canPostReview = user?.isLoggedIn && user.id !== spotOwnerId && !hasReviewed;
 
   return (
     <div className="PostReviewButton" data-testid="review-button">
@@ -11,9 +12,7 @@ function PostReviewButton({ user }) {
           modalComponent={<PostReviewFormModal />}
           buttonText="Post Your Review"
         />
-      ) : (
-        <p>You must be logged in to post a review.</p>
-      )}
+      ) : null}
     </div>
   );
 }

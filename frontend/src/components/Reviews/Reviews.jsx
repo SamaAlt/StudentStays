@@ -47,7 +47,13 @@ function Reviews() {
       <StarAndRating avgRating={spot.avgStarRating} />
       <span>{spot.numReviews? `· ${spot.numReviews} Review${spot.numReviews === 1 ? '' : 's'}`: ''}</span>
       </div>
-      {currentUser && !checkReviewedSpot.length && currentUser.id !== spot.ownerId && ( <PostReviewButton />)}
+      {currentUser && (
+  <PostReviewButton
+    user={currentUser}
+    spotOwnerId={spot.ownerId}
+    hasReviewed={checkReviewedSpot.length > 0}
+  />
+)}
       {showFirstPostReviewMessage ? (
         <p>Post a review</p>
       ) : (
