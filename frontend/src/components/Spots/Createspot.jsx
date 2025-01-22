@@ -47,12 +47,17 @@ function CreateSpot() {
         if (description.length < 30) validationErrors.description = "Description needs 30 or more characters";
         if (!title) validationErrors.title = "Name is required";
         if (!price) validationErrors.price = "Price per night is required";
+        // if (!previewImage) {
+        //     validationErrors.previewImage = "Must include 4 images. Preview image URL is required";
+        //   } else if (!previewImage.endsWith(".png") && !previewImage.endsWith(".jpg") && !previewImage.endsWith(".jpeg")) {
+        //     validationErrors.previewImage = "Must include 4 images. Preview image URL must end in .png, .jpg, or .jpeg";
+        //   }
         if (!previewImage) {
-            validationErrors.previewImage = "Must include 4 images. Preview image URL is required";
-          } else if (!previewImage.endsWith(".png") && !previewImage.endsWith(".jpg") && !previewImage.endsWith(".jpeg")) {
-            validationErrors.previewImage = "Must include 4 images. Preview image URL must end in .png, .jpg, or .jpeg";
-          }
-
+          validationErrors.previewImage = "Must include 4 images. Preview image URL is required";
+      } else if (!isValidURL(previewImage)) {
+          validationErrors.previewImage = "Must include 4 images. Preview image URL must be a valid URL";
+      }
+      
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
@@ -87,7 +92,15 @@ function CreateSpot() {
 
           redirecting(spotId);
     };
-
+// Add the isValidURL function here
+const isValidURL = (url) => {
+  try {
+      new URL(url);
+      return true;
+  } catch {
+      return false;
+  }
+};
     const redirecting = (spotId) => {
         navigate(`/spots/${spotId}`);
     };
