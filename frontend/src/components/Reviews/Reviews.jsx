@@ -52,11 +52,13 @@ function Reviews() {
           {console.log("User: ", currentUser)}
           {console.log("Spot Owner: ", spot.ownerId)}
           {console.log("Has Reviewed: ", checkReviewedSpot.length > 0)}
-          <PostReviewButton
-            user={currentUser}
-            spotOwnerId={spot.ownerId}
-            hasReviewed={checkReviewedSpot.length > 0}
-          />
+          {currentUser.id !== spot.ownerId && checkReviewedSpot.length === 0 && (
+            <PostReviewButton
+              user={currentUser}
+              spotOwnerId={spot.ownerId}
+              hasReviewed={checkReviewedSpot.length > 0}
+            />
+          )}
         </div>
       )}
       {showFirstPostReviewMessage ? (
