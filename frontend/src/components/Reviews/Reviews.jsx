@@ -7,7 +7,7 @@ import { getSpotDetail } from "../../store/spots";
 import PostReviewButton from "./PostReviewModalButton";
 import DeleteReviewButton from "./DeleteReviewButton";
 import StarAndRating from "./StarAndRating";
-import PostReviewFormModal from './PostReviewFormModal'; // Ensure you have this PostReviewFormModal component
+import PostReviewFormModal from './PostReviewFormModal';
 
 function Reviews() {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ function Reviews() {
   const checkReviewedSpot = currentUser ? Object.values(userReviews).filter((e) => e.spotId == spotId) : [];
 
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false); // Add state for modal visibility
+  const [showModal, setShowModal] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {

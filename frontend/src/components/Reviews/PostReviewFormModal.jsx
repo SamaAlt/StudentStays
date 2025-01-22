@@ -1,23 +1,22 @@
-// components/reviews/postreviewformmodal.jsx
-
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import { addReviewThunk } from "../../store/review";
 import './PostReviewFormModal.css';
 
-function PostReviewFormModal() {
+function PostReviewFormModal({ onClose }) {
     const dispatch = useDispatch();
     const [review, setReview] = useState("");
     const spotId = useSelector((state) => state.spots.targetSpot.id);
     const [activeRating, setActiveRating] = useState(0);
-    const [rating, setRating]= useState(0)
+    const [rating, setRating]= useState(0);
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal();
+
     useEffect(() => {
         setReview("");
         setActiveRating(0);
-        setRating(0)
+        setRating(0);
         setErrors([]);
     }, []);
 
@@ -37,11 +36,13 @@ function PostReviewFormModal() {
         setErrors(response.errors);
         } else {
         closeModal();
+        onClose();
         }
     };
+
     return (
         <>
-        <form className= 'postReviewForm'onSubmit={handleSubmit} data-testid="review-modal">
+        <form className= 'postReviewForm' onSubmit={handleSubmit} data-testid="review-modal">
             <label className="reviewCommentSection">
             <span className="reviewTitle">How was your stay?</span>
             {errors.length > 0 && (<span>{errors}</span>)}
@@ -51,7 +52,7 @@ function PostReviewFormModal() {
                 placeholder="Leave your review here..."
             />
             </label >
-            <label className="starsSection" onMouseLeave={()=>setActiveRating(rating)}>
+            <label className="starsSection" onMouseLeave={() => setActiveRating(rating)}>
                 {[1, 2, 3, 4, 5].map((starNumber) => (
                     <label key={starNumber} className="star" onMouseEnter={() => setActiveRating(starNumber)} onClick={() => setRating(starNumber)} data-testid="star-rating">
                         <span 
