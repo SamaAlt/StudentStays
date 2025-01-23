@@ -50,7 +50,7 @@ function CreateSpot() {
         if (!previewImage) {
             validationErrors.previewImage = "Preview image URL is required";
           } else if (!previewImage.endsWith(".png") && !previewImage.endsWith(".jpg") && !previewImage.endsWith(".jpeg")) {
-            validationErrors.previewImage = "Must add 4 images. Preview image URL must end in .png, .jpg, or .jpeg";
+            validationErrors.previewImage = "Preview image URL must end in .png, .jpg, or .jpeg";
           }
         const isValidImageUrl = (url) => {
             return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg");
@@ -85,11 +85,16 @@ function CreateSpot() {
         }
       
         const spotId = response.id;
-
+        
         const images = [previewImage, image1, image2, image3, image4]
-        .filter(e => !e)
-        .map((url, index) => ({ url, preview: index === 0 }))
-      
+        .filter(e => e)
+        .map((url, index) => ({ url, preview: index === 0 }));
+    
+    for (let image of images) {
+        await dispatch(addSpotImageThunk(spotId, image));
+    }
+    
+
           for (let image of images) {
             await dispatch(addSpotImageThunk(spotId, image));
           }
