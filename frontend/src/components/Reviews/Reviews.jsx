@@ -53,7 +53,7 @@ function Reviews() {
           {console.log("User: ", currentUser)}
           {console.log("Spot Owner: ", spot.ownerId)}
           {console.log("Has Reviewed: ", checkReviewedSpot.length > 0)}
-          {currentUser.id !== spot.ownerId && (
+          {currentUser.id !== spot.ownerId && checkReviewedSpot.length === 0 && (
             <>
               <button onClick={() => setShowModal(true)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
                 Post a review
