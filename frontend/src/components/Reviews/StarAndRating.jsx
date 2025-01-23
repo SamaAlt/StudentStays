@@ -14,7 +14,7 @@ const StarAndRating = ({ avgRating }) => {
   }
 
   return (
-    <div className="starRating" data-testid='spot-rating'>
+    <div className="starRating">
       <span role="img" aria-label="star">✨</span>
       <span>{formatRating}</span>
     </div>

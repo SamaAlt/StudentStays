@@ -42,7 +42,7 @@ function PostReviewFormModal({ onClose }) {
 
     return (
         <>
-        <form className= 'postReviewForm' onSubmit={handleSubmit} data-testid="review-modal">
+        <form className= 'postReviewForm' onSubmit={handleSubmit}>
             <label className="reviewCommentSection">
             <span className="reviewTitle">How was your stay?</span>
             {errors.length > 0 && (<span>{errors}</span>)}
@@ -54,7 +54,7 @@ function PostReviewFormModal({ onClose }) {
             </label >
             <label className="starsSection" onMouseLeave={() => setActiveRating(rating)}>
                 {[1, 2, 3, 4, 5].map((starNumber) => (
-                    <label key={starNumber} className="star" onMouseEnter={() => setActiveRating(starNumber)} onClick={() => setRating(starNumber)} data-testid="star-rating">
+                    <label key={starNumber} className="star" onMouseEnter={() => setActiveRating(starNumber)} onClick={() => setRating(starNumber)}>
                         <span 
                             style={{ fontSize: '24px', cursor: 'pointer' }} 
                             onClick={() => setRating(starNumber)}

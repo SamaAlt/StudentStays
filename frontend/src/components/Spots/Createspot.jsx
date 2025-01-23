@@ -108,13 +108,13 @@ function CreateSpot() {
 
 
     return (
-    <div className="newSpotForm" data-testid="create-spot-form">
+    <div className="newSpotForm">
       <form className="addressForm" onSubmit={handleSubmit}>
-          <h1 data-testid="form-title">Create a New Spot</h1>
-<div data-testid="section-1">
+          <h1>Create a New Spot</h1>
+<div>
         <div className="intro">
-          <h2 data-testid="section-1-heading">Where&apos;s your place located?</h2>
-          <h3 data-testid="section-1-caption">Guests will only get your exact address once they booked a reservation.</h3>
+          <h2>Where&apos;s your place located?</h2>
+          <h3>Guests will only get your exact address once they booked a reservation.</h3>
         </div>
         <label>
           Country{errors.country && <p className="errorMessage">{errors.country}</p>}
@@ -184,9 +184,9 @@ function CreateSpot() {
         </label>
         </div>
 </div>
-<div data-testid="section-2">
-        <h2 data-testid="section-2-heading">Describtion</h2>
-        <p data-testid="section-2-caption" >Add location features</p>
+<div>
+        <h2>Describtion</h2>
+        <p>Add location features</p>
         {errors.description && <p className="errorMessage">{errors.description}</p>}
         <label>
           <textarea
@@ -197,9 +197,9 @@ function CreateSpot() {
           />
         </label>
 </div>        
-<div data-testid="section-3">
-        <h2 data-testid="section-3-heading">Create a title for your spot</h2>
-        <p data-testid="section-3-caption">Add a title</p>
+<div>
+        <h2>Create a title for your spot</h2>
+        <p>Add a title</p>
         {errors.title && <p className="errorMessage">{errors.title}</p>}
         <label>
           <input
@@ -210,9 +210,9 @@ function CreateSpot() {
           />
         </label>
 </div>
-<div data-testid="section-4">
-        <h2 data-testid="section-4-heading">Set a base price for your spot</h2>
-        <p data-testid="section-4-caption" >Set your price</p>
+<div>
+        <h2>Set a base price for your spot</h2>
+        <p>Set your price</p>
         {errors.price && <p className="errorMessage">{errors.price}</p>}
         <label>
           <div className="priceLabel">
@@ -226,9 +226,9 @@ function CreateSpot() {
           </div>
         </label>
 </div>        
-<div data-testid="section-5">
-        <h2 data-testid="section-5-heading">Add photos</h2>
-        <p data-testid="section-5-caption">Add a link for your location</p>
+<div>
+        <h2>Add photos</h2>
+        <p>Add a link for your location</p>
         <label>
           <input
             type="url"

@@ -15,7 +15,7 @@ function DeleteSpotModal({spotId}){
 
 
     return (
-        <div className="modalSection" data-testid='delete-spot-modal'>
+        <div className="modalSection">
           <h2 className="deleteTitle">Confirm Deletion</h2>
           <p className="deleteMessage">Are you sure you want to remove this spot?</p>
           <div className="deleteButtons">

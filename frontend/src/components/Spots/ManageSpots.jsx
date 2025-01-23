@@ -36,7 +36,7 @@ function ManageSpots() {
   return (
     <>
       <h1 >Manage Spots</h1>
-    <div className="ownedSpots" data-testid="user-spots">
+    <div className="ownedSpots">
       <div className="title">
       </div>
       {!Object.values(userOwnedSpots).length ? (
@@ -50,19 +50,19 @@ function ManageSpots() {
         .slice()
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))        
         .map((spot) => (
-            <div key={spot.id} className="eachSpot" data-testid="spot-tile">
+            <div key={spot.id} className="eachSpot">
 
             <div key={spot.id} className="images" onClick={() => redirecting(spot.id)}>
-            <img src={spot.previewImage} alt={spot.name} className="spotThumbnail" data-testid="spot-thumbnail-image"/>
+            <img src={spot.previewImage} alt={spot.name} className="spotThumbnail"/>
             </div>
 
             <div className="locationAndRating">
-                <p data-testid="spot-city">{spot.city}, {spot.state}</p>
+                <p>{spot.city}, {spot.state}</p>
                 <StarAndRating avgRating={spot.avgRating}/>
             </div>
 
             <div className="priceSection">
-                <p data-testid="spot-price">$ {spot.price} per night</p>
+                <p>$ {spot.price} per night</p>
             </div>
 
               

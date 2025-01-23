@@ -6,7 +6,7 @@ function PostReviewButton({ user, spotOwnerId, hasReviewed }) {
   const canPostReview = user?.isLoggedIn && user.id !== spotOwnerId && !hasReviewed;
 
   return (
-    <div className="PostReviewButton buttonBorder" data-testid="review-button">
+    <div className="PostReviewButton buttonBorder">
       {canPostReview ? (
         <OpenModalButton
           modalComponent={<PostReviewFormModal />}
