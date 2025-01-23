@@ -21,7 +21,7 @@ function Reviews() {
   const checkReviewedSpot = currentUser ? Object.values(userReviews).filter((e) => e.spotId == spotId) : [];
 
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +63,9 @@ function Reviews() {
                 spotOwnerId={spot.ownerId}
                 hasReviewed={checkReviewedSpot.length > 0}
               />
+              {showModal && (
+                <PostReviewFormModal onClose={() => setShowModal(false)} spotId={spotId} />
+              )}
             </>
           )}
         </div>
@@ -82,9 +85,6 @@ function Reviews() {
           </div>
         );
       })}
-      {showModal && (
-        <PostReviewFormModal onClose={() => setShowModal(false)} spotId={spotId} />
-      )}
     </div>
   );
 }
