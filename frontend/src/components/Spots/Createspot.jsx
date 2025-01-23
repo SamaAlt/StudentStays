@@ -50,7 +50,7 @@ function CreateSpot() {
         if (!previewImage) {
             validationErrors.previewImage = "Preview image URL is required";
           } else if (!previewImage.endsWith(".png") && !previewImage.endsWith(".jpg") && !previewImage.endsWith(".jpeg")) {
-            validationErrors.previewImage = "Preview image URL must end in .png, .jpg, or .jpeg";
+            validationErrors.previewImage = "Add 4 images. Preview image URL must end in .png";
           }
         const isValidImageUrl = (url) => {
             return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg");
